@@ -70,12 +70,7 @@
       </div>
     </div>
 
-    <!-- Indicador de pantalla/estadio (opcional) -->
-    <div class="mt-8 flex justify-center">
-      <div class="px-8 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-full shadow-lg">
-        ⚽ CANCHA ⚽
-      </div>
-    </div>
+
   </div>
 </template>
 
