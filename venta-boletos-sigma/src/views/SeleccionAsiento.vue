@@ -157,7 +157,7 @@ const fetchStadiums = async () => {
   error.value = null
 
   try {
-    const response = await fetch('http://127.0.0.1:8000/api/v1/seats/stadiums', {
+    const response = await fetch('http://127.0.0.1:8000/api/v1/stadiums/stadiums', {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -185,7 +185,7 @@ const fetchAreas = async (stadiumId: number) => {
 
   try {
     const response = await fetch(
-      `http://127.0.0.1:8000/api/v1/seats/${stadiumId}/areas`,
+      `http://127.0.0.1:8000/api/v1/stadiums/${stadiumId}/areas`,
       {
         method: 'GET',
         headers: {
