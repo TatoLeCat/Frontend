@@ -1,15 +1,27 @@
-import SeleccionAsiento from '@/views/SeleccionAsiento.vue'
-
+import SeleccionAsiento from "@/views/SeleccionAsiento.vue";
+import LoginView from "@/views/LoginView.vue";
+import RegisterView from "@/views/RegisterView.vue";
+import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-  
-      path: '/seleccionAsiento',
-  name: 'seleccionAsisnto',
-  component: SeleccionAsiento,
-  },
+      path: "/seleccionAsiento",
+      name: "seleccionAsisnto",
+      component: SeleccionAsiento,
+    },
     {
+      path: "/login",
+      name: "login",
+      component: LoginView,
+    },
 
+    {
+      path: "/register",
+      name: "register",
+      component: RegisterView,
+    },
+  ],
+});
 export default router;
