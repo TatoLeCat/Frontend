@@ -1,10 +1,13 @@
 <script setup>
-import Login from "./views/LoginView.vue";
 import { RouterView } from "vue-router";
+import Toast from "primevue/toast";
 </script>
 
 <template>
-  <RouterView></RouterView>
+  <div>
+    <Toast />
+    <router-view></router-view>
+  </div>
 </template>
 
 <style scoped></style>

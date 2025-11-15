@@ -16,6 +16,7 @@
               >¿No tienes una cuenta?</span
             >
             <a
+              @click="router.push('/register')"
               class="text-primary font-medium ml-1 cursor-pointer hover:text-primary-emphasis"
               >Unete ahora!</a
             >
@@ -32,6 +33,7 @@
           <InputText
             id="email1"
             type="text"
+            v-model="email"
             placeholder="Email address"
             class="w-full px-3 py-2 shadow-sm rounded-lg"
           />
@@ -55,14 +57,6 @@
         <div
           class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-3 sm:gap-0"
         >
-          <div class="flex items-center gap-2">
-            <Checkbox id="rememberme1" v-model="checked1" :binary="true" />
-            <label
-              for="rememberme1"
-              class="text-surface-900 dark:text-surface-0 leading-normal"
-              >Recuerdame</label
-            >
-          </div>
           <a
             class="text-primary font-medium cursor-pointer hover:text-primary-emphasis"
             >¿Olvido su contraseña?</a
@@ -70,8 +64,10 @@
         </div>
       </div>
       <Button
-        label="Sign In"
+        label="Iniciar sesión"
         icon="pi pi-user"
+        :loading="loading"
+        @click="handleLogin"
         class="w-full py-2 rounded-lg flex justify-center items-center gap-2"
       >
         <template #icon>
@@ -84,12 +80,67 @@
 
 <script setup>
 import Button from "primevue/button";
-import Checkbox from "primevue/checkbox";
 import InputText from "primevue/inputtext";
 import Password from "primevue/password";
-
+import { useToast } from "primevue/usetoast";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+import AuthService from "@/services/AuthService";
+
+const router = useRouter();
+const toast = useToast();
 
 const password = ref("");
-const checked1 = ref(true);
+const email = ref("");
+const loading = ref(false);
+
+const handleLogin = async () => {
+  // Validación básica
+  if (!email.value || !password.value) {
+    toast.add({
+      severity: "warn",
+      summary: "Campos requeridos",
+      detail: "Por favor ingresa tu email y contraseña",
+      life: 3000,
+    });
+    return;
+  }
+
+  loading.value = true;
+
+  try {
+    await AuthService.login(email.value, password.value);
+
+    toast.add({
+      severity: "success",
+      summary: "Login exitoso",
+      detail: "Bienvenido de nuevo!",
+      life: 3000,
+    });
+
+    // Redirigir al usuario a la página principal o dashboard
+    router.push("/"); // Cambia esto por la ruta que necesites
+  } catch (error) {
+    console.error("Error en login:", error);
+
+    let errorDetail = "Email o contraseña incorrectos";
+
+    // Si es error 405, mensaje específico
+    if (error.status === 405) {
+      errorDetail =
+        "Método no permitido. Verifica la URL de la API o el endpoint.";
+    } else if (error.message) {
+      errorDetail = error.message;
+    }
+
+    toast.add({
+      severity: "error",
+      summary: `Error ${error.status || ""} de autenticación`,
+      detail: errorDetail,
+      life: 5000,
+    });
+  } finally {
+    loading.value = false;
+  }
+};
 </script>
