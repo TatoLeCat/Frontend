@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-surface-50 dark:bg-surface-950 px-6 py-20 md:px-20 lg:px-80">
+  <div class="bg-surface-50 dark:bg-surface-950 min-h-screen px-6 py-12 md:px-20 lg:px-80 flex items-center justify-center">
     <div
       class="bg-surface-0 dark:bg-surface-900 p-8 md:p-12 shadow-sm rounded-2xl w-full max-w-sm mx-auto flex flex-col gap-8"
     >
@@ -118,14 +118,13 @@ const handleLogin = async () => {
       life: 3000,
     });
 
-    // Redirigir al usuario a la página principal o dashboard
-    router.push("/"); // Cambia esto por la ruta que necesites
+    // Redirigir al usuario a la página principal
+    router.push("/");
   } catch (error) {
     console.error("Error en login:", error);
 
     let errorDetail = "Email o contraseña incorrectos";
 
-    // Si es error 405, mensaje específico
     if (error.status === 405) {
       errorDetail =
         "Método no permitido. Verifica la URL de la API o el endpoint.";
