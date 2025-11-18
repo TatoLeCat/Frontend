@@ -1,20 +1,20 @@
 <template>
   <div class="flex flex-col gap-6">
-    <!-- Ticket Image -->
+    <!-- Match Image -->
     <div class="w-full h-48 rounded-xl overflow-hidden">
       <img
         :src="ticket.image"
-        :alt="ticket.eventName"
+        :alt="`${ticket.team1} vs ${ticket.team2}`"
         class="w-full h-full object-cover"
       />
     </div>
 
-    <!-- Ticket Information -->
+    <!-- Match Information -->
     <div class="flex flex-col gap-4">
-      <!-- Event Details -->
+      <!-- Match Details -->
       <div class="flex flex-col gap-2">
         <h2 class="text-surface-900 dark:text-surface-0 font-semibold text-lg">
-          {{ ticket.eventName }}
+          {{ ticket.team1 }} vs {{ ticket.team2 }}
         </h2>
         <p class="text-surface-600 dark:text-surface-300 text-sm">
           {{ ticket.description }}
@@ -29,12 +29,19 @@
         </div>
         <div class="flex items-center gap-3">
           <i class="pi pi-map-marker text-primary text-sm w-5"></i>
-          <span class="text-surface-700 dark:text-surface-300 text-sm">{{ ticket.location }}</span>
+          <div class="flex flex-col">
+            <span class="text-surface-700 dark:text-surface-300 text-sm font-semibold">{{ ticket.stadium }}</span>
+            <span class="text-surface-600 dark:text-surface-300 text-xs">{{ ticket.city }}, USA</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <i class="pi pi-flag text-primary text-sm w-5"></i>
+          <span class="text-surface-700 dark:text-surface-300 text-sm">Fase: {{ ticket.phase }}</span>
         </div>
         <div class="flex items-center gap-3">
           <i class="pi pi-chair text-primary text-sm w-5"></i>
           <span class="text-surface-700 dark:text-surface-300 text-sm">
-            Fila {{ ticket.row }} - Asiento {{ ticket.seatNumber }}
+            Sector {{ ticket.sector }} - Fila {{ ticket.row }} - Asiento {{ ticket.seatNumber }}
           </span>
         </div>
       </div>
