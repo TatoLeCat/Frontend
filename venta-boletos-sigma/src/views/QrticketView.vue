@@ -1,16 +1,14 @@
 <template>
   <div class="qr-ticket-container">
-
     <h1 class="title">Tu Boleto Digital</h1>
 
     <div class="ticket-card">
-
       <div class="qr-wrapper">
-        <img 
+        <img
           v-if="qrImage"
-          :src="qrImage" 
-          alt="Código QR del boleto" 
-          class="qr-img" 
+          :src="qrImage"
+          alt="Código QR del boleto"
+          class="qr-img"
         />
         <p v-else class="loading-text">Generando tu código QR...</p>
       </div>
@@ -38,9 +36,7 @@
           <span class="value">{{ ticket.date }}</span>
         </div>
 
-        <button class="download-btn" @click="downloadQR">
-          Descargar QR
-        </button>
+        <button class="download-btn" @click="downloadQR">Descargar QR</button>
       </div>
     </div>
   </div>
@@ -68,21 +64,18 @@ const ticket = {
 // =====================================
 async function fetchQR() {
   try {
-    const response = await axios.get(
-      "http://localhost:8000/qr/generate",
-      {
-        params: {
-          ticket_id: ticket.ticketId,
-          event: ticket.eventName,
-          stadium: ticket.stadium,
-          date: ticket.date,
-          owner: ticket.ownerName
-        },
-        responseType: "blob", 
-    );
+    const response = await axios.get("http://localhost:8000/qr/generate", {
+      params: {
+        ticket_id: ticket.ticketId,
+        event: ticket.eventName,
+        stadium: ticket.stadium,
+        date: ticket.date,
+        owner: ticket.ownerName,
+      },
+      responseType: "blob",
+    });
 
     qrImage.value = URL.createObjectURL(response.data);
-
   } catch (error) {
     console.error("Error generando el QR:", error);
   }
@@ -114,3 +107,5 @@ onMounted(fetchQR);
 .ticket-card {
   background: white;
   padding: 25px;
+}
+</style>

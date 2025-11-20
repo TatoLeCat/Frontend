@@ -8,7 +8,7 @@ import HistorialView from "@/views/HistorialView.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import UserTicketView from "@/views/UserTicketView.vue";
 import QrticketView from "@/views/QrticketView.vue";
-import ScanQrView from "@/views/ScanQrView.vue";
+import ScanQrView from "@/views/ScanQRView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,22 +50,21 @@ const router = createRouter({
     },
 
     {
-  path: "/ticket",
-  name: "ticket",
-  component: UserTicketView,
-},
-{
-  path: "/ticket/qr/:id",
-  name: "ticket-qr",
-  component: QrTicketView,
-  props: true,
-},
-{
-  path: "/scan-qr",
-  name: "scan-qr",
-  component: ScanQrView,
-},
-
+      path: "/ticket",
+      name: "ticket",
+      component: UserTicketView,
+    },
+    {
+      path: "/ticket/qr/:id",
+      name: "ticket-qr",
+      component: QrticketView,
+      props: true,
+    },
+    {
+      path: "/scan-qr",
+      name: "scan-qr",
+      component: ScanQrView,
+    },
   ],
 });
 export default router;

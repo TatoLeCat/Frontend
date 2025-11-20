@@ -1,6 +1,7 @@
 <template>
-  <div class="min-h-screen bg-gray-900 text-white flex flex-col items-center px-6 py-10">
-
+  <div
+    class="min-h-screen bg-gray-900 text-white flex flex-col items-center px-6 py-10"
+  >
     <!-- Título -->
     <h1 class="text-3xl font-bold mb-4">Escanear Ticket (QR)</h1>
     <p class="text-gray-300 text-center mb-6">
@@ -18,7 +19,6 @@
 
     <!-- Estados -->
     <div class="mt-6 w-full max-w-md text-center">
-
       <!-- Loading -->
       <div v-if="loading" class="text-yellow-400 font-semibold">
         Validando QR...
@@ -43,13 +43,12 @@
     >
       Escanear otro QR
     </button>
-
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { QrcodeStream } from "vue-qrcode-reader";
+//import { QrcodeStream } from "vue-qrcode-reader";  -- dependencia que se debe instalar, primero realizar investigacion
 import axios from "axios";
 
 // Estados
@@ -78,10 +77,9 @@ const onDetect = async (content) => {
 
   try {
     // Llamada al microservicio QR
-    const response = await axios.post(
-      "http://localhost:8000/qr/validate",
-      { qr_content: content[0].rawValue }
-    );
+    const response = await axios.post("http://localhost:8000/qr/validate", {
+      qr_content: content[0].rawValue,
+    });
 
     successMessage.value = response.data.message;
   } catch (err) {
