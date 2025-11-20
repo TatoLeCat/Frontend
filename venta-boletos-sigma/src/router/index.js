@@ -6,6 +6,9 @@ import PartidosView from "@/views/PartidosView.vue";
 import PerfilView from "@/views/PerfilView.vue";
 import HistorialView from "@/views/HistorialView.vue";
 import { createRouter, createWebHistory } from "vue-router";
+import UserTicketView from "@/views/UserTicketView.vue";
+import QrticketView from "@/views/QrticketView.vue";
+import ScanQrView from "@/views/ScanQrView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +48,24 @@ const router = createRouter({
       name: "register",
       component: RegisterView,
     },
+
+    {
+  path: "/ticket",
+  name: "ticket",
+  component: UserTicketView,
+},
+{
+  path: "/ticket/qr/:id",
+  name: "ticket-qr",
+  component: QrTicketView,
+  props: true,
+},
+{
+  path: "/scan-qr",
+  name: "scan-qr",
+  component: ScanQrView,
+},
+
   ],
 });
 export default router;
