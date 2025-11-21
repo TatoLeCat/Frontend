@@ -4,10 +4,10 @@
       <!-- Header -->
       <div class="flex flex-col gap-2">
         <h1 class="text-surface-900 dark:text-surface-0 text-3xl font-semibold">
-          Ofertas de Boletos Disponibles
+          Ofertas de Boletos - Mundial de Fútbol 2026
         </h1>
         <p class="text-surface-700 dark:text-surface-200">
-          Selecciona tu boleto y completa la compra en menos de 72 horas
+          Selecciona tu boleto para los partidos del mundial y completa la compra en menos de 72 horas
         </p>
       </div>
 
@@ -15,14 +15,14 @@
       <div class="flex flex-col sm:flex-row gap-4">
         <div class="flex-1">
           <label class="text-surface-900 dark:text-surface-0 font-medium block mb-2">
-            Filtrar por evento
+            Filtrar por fase
           </label>
           <Dropdown
-            v-model="selectedEvent"
-            :options="events"
+            v-model="selectedPhase"
+            :options="phases"
             optionLabel="name"
             optionValue="id"
-            placeholder="Todos los eventos"
+            placeholder="Todas las fases"
             class="w-full"
           />
         </div>
@@ -52,27 +52,32 @@
           <div class="flex justify-between items-start mb-4">
             <div>
               <h3 class="text-surface-900 dark:text-surface-0 font-semibold text-lg">
-                {{ ticket.eventName }}
+                {{ ticket.team1 }} vs {{ ticket.team2 }}
               </h3>
               <p class="text-surface-600 dark:text-surface-300 text-sm">
                 {{ ticket.eventDate }}
               </p>
             </div>
             <Tag
-              :value="ticket.category"
-              :severity="getCategorySeverity(ticket.category)"
+              :value="ticket.phase"
+              :severity="getPhaseSeverity(ticket.phase)"
               class="text-xs"
             />
           </div>
 
           <!-- Ticket Details -->
           <div class="flex flex-col gap-3 mb-6 pb-6 border-b border-surface-200 dark:border-surface-700">
-            <!-- Location -->
+            <!-- Stadium -->
             <div class="flex items-center gap-2">
               <i class="pi pi-map-marker text-primary text-sm"></i>
-              <span class="text-surface-700 dark:text-surface-300 text-sm">
-                {{ ticket.location }}
-              </span>
+              <div class="flex flex-col">
+                <span class="text-surface-900 dark:text-surface-0 font-semibold text-sm">
+                  {{ ticket.stadium }}
+                </span>
+                <span class="text-surface-600 dark:text-surface-300 text-xs">
+                  {{ ticket.city }}, USA
+                </span>
+              </div>
             </div>
 
             <!-- Price -->
@@ -108,7 +113,7 @@
           <div class="mb-4 p-3 bg-yellow-50 dark:bg-yellow-950 rounded-lg border border-yellow-200 dark:border-yellow-800">
             <p class="text-yellow-800 dark:text-yellow-200 text-xs flex items-center gap-2">
               <i class="pi pi-clock text-sm"></i>
-              Ofrerta válida por: <span class="font-semibold">{{ ticket.timeLimit }} horas</span>
+              Oferta válida por: <span class="font-semibold">{{ ticket.timeLimit }} horas</span>
             </p>
           </div>
 
@@ -136,7 +141,7 @@
     <!-- Ticket Detail Dialog -->
     <Dialog
       v-model:visible="showDetailDialog"
-      :header="selectedTicketData?.eventName"
+      :header="`${selectedTicketData?.team1} vs ${selectedTicketData?.team2}`"
       :modal="true"
       :style="{ width: '90vw', maxWidth: '500px' }"
       class="rounded-2xl"
@@ -163,93 +168,142 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-// Mock data - reemplazar con datos reales de API
 const tickets = ref([
   {
     id: 1,
-    eventName: 'Concierto Bruno Mars',
-    eventDate: '15 de Diciembre, 2024',
-    location: 'Estadio Nacional - Sector A',
-    price: 89.99,
+    team1: 'Argentina',
+    team2: 'Francia',
+    eventDate: '15 de Junio, 2026',
+    stadium: 'MetLife Stadium',
+    city: 'New Jersey',
+    price: 189.99,
     available: 12,
-    category: 'VIP',
+    phase: 'Semifinal',
     timeLimit: 72,
-    image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400',
-    description: 'Boleto para concierto de Bruno Mars con excelente vista del escenario',
+    image: 'https://images.unsplash.com/photo-1516231318713-ef900995ad4d?w=400',
+    description: 'Boleto para la semifinal Argentina vs Francia con excelente vista del terreno',
     seatNumber: 'A-125',
     row: 'A',
+    sector: 'Sur',
   },
   {
     id: 2,
-    eventName: 'Concierto Bruno Mars',
-    eventDate: '15 de Diciembre, 2024',
-    location: 'Estadio Nacional - Sector B',
-    price: 65.99,
+    team1: 'Brasil',
+    team2: 'Alemania',
+    eventDate: '14 de Junio, 2026',
+    stadium: 'Soldier Field',
+    city: 'Chicago',
+    price: 159.99,
     available: 25,
-    category: 'General',
+    phase: 'Cuartos de Final',
     timeLimit: 72,
-    image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400',
-    description: 'Boleto general para concierto de Bruno Mars',
+    image: 'https://images.unsplash.com/photo-1516231318713-ef900995ad4d?w=400',
+    description: 'Boleto para cuartos de final Brasil vs Alemania',
     seatNumber: 'B-350',
     row: 'B',
+    sector: 'Oriente',
   },
   {
     id: 3,
-    eventName: 'Partido Semifinal - Fútbol',
-    eventDate: '20 de Diciembre, 2024',
-    location: 'Estadio Metropolitano - Tribuna Sur',
-    price: 45.00,
+    team1: 'España',
+    team2: 'Holanda',
+    eventDate: '13 de Junio, 2026',
+    stadium: 'AT&T Stadium',
+    city: 'Dallas',
+    price: 145.00,
     available: 0,
-    category: 'General',
+    phase: 'Cuartos de Final',
     timeLimit: 72,
     image: 'https://images.unsplash.com/photo-1516231318713-ef900995ad4d?w=400',
-    description: 'Boleto para partido semifinal',
+    description: 'Boleto para cuartos de final España vs Holanda',
     seatNumber: 'S-100',
     row: 'Sur',
+    sector: 'Occidental',
   },
   {
     id: 4,
-    eventName: 'Festival de Teatro',
-    eventDate: '22 de Diciembre, 2024',
-    location: 'Teatro Municipal - Platea',
-    price: 35.50,
+    team1: 'Italia',
+    team2: 'Uruguay',
+    eventDate: '10 de Junio, 2026',
+    stadium: 'SoFi Stadium',
+    city: 'Inglewood',
+    price: 125.50,
     available: 8,
-    category: 'Premium',
+    phase: 'Octavos de Final',
     timeLimit: 72,
-    image: 'https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?w=400',
-    description: 'Entrada para festival de teatro',
+    image: 'https://images.unsplash.com/photo-1516231318713-ef900995ad4d?w=400',
+    description: 'Entrada para octavos de final Italia vs Uruguay',
     seatNumber: 'P-45',
     row: 'Platea',
+    sector: 'Norte',
+  },
+  {
+    id: 5,
+    team1: 'Bélgica',
+    team2: 'Japón',
+    eventDate: '9 de Junio, 2026',
+    stadium: 'Arrowhead Stadium',
+    city: 'Kansas City',
+    price: 99.99,
+    available: 45,
+    phase: 'Octavos de Final',
+    timeLimit: 72,
+    image: 'https://images.unsplash.com/photo-1516231318713-ef900995ad4d?w=400',
+    description: 'Entrada para octavos de final Bélgica vs Japón',
+    seatNumber: 'G-200',
+    row: 'General',
+    sector: 'Este',
+  },
+  {
+    id: 6,
+    team1: 'Portugal',
+    team2: 'México',
+    eventDate: '8 de Junio, 2026',
+    stadium: 'NRG Stadium',
+    city: 'Houston',
+    price: 89.99,
+    available: 60,
+    phase: 'Fase de Grupos',
+    timeLimit: 72,
+    image: 'https://images.unsplash.com/photo-1516231318713-ef900995ad4d?w=400',
+    description: 'Entrada para fase de grupos Portugal vs México',
+    seatNumber: 'G-300',
+    row: 'General',
+    sector: 'Oeste',
   },
 ]);
 
-const events = ref([
-  { id: 1, name: 'Concierto Bruno Mars' },
-  { id: 2, name: 'Partido Semifinal - Fútbol' },
-  { id: 3, name: 'Festival de Teatro' },
+const phases = ref([
+  { id: 1, name: 'Fase de Grupos' },
+  { id: 2, name: 'Octavos de Final' },
+  { id: 3, name: 'Cuartos de Final' },
+  { id: 4, name: 'Semifinal' },
+  { id: 5, name: 'Final' },
 ]);
 
-const selectedEvent = ref(null);
+const selectedPhase = ref(null);
 const priceRange = ref([0, 500]);
 const showDetailDialog = ref(false);
 const selectedTicketData = ref(null);
 
 const filteredTickets = computed(() => {
   return tickets.value.filter((ticket) => {
-    const eventMatch =
-      !selectedEvent.value || ticket.eventName.includes(events.value.find(e => e.id === selectedEvent.value)?.name || '');
+    const phaseMatch =
+      !selectedPhase.value || ticket.phase === phases.value.find(p => p.id === selectedPhase.value)?.name;
     const priceMatch = ticket.price >= priceRange.value[0] && ticket.price <= priceRange.value[1];
-    return eventMatch && priceMatch;
+    return phaseMatch && priceMatch;
   });
 });
 
-const getCategorySeverity = (category) => {
+const getPhaseSeverity = (phase) => {
   const severityMap = {
-    VIP: 'danger',
-    Premium: 'warning',
-    General: 'info',
+    'Final': 'danger',
+    'Semifinal': 'warning',
+    'Cuartos de Final': 'info',
+    'Octavos de Final': 'success',
+    'Fase de Grupos': 'info',
   };
-  return severityMap[category] || 'info';
+  return severityMap[phase] || 'info';
 };
 
 const selectTicket = (ticket) => {

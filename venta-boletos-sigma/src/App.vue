@@ -12,42 +12,30 @@
         </p>
       </div>
 
-      <!-- Tabs Navigation -->
+      <!-- Navegación principal -->
       <div class="bg-surface-0 dark:bg-surface-900 rounded-lg shadow-sm p-4 mb-6">
         <div class="flex flex-wrap gap-2">
-          <Button
-            v-for="tab in tabs"
-            :key="tab.id"
-            :label="tab.label"
-            :severity="activeTab === tab.id ? 'primary' : 'secondary'"
-            @click="activeTab = tab.id"
-            class="px-4 py-2 rounded-lg transition-all"
-            :outlined="activeTab !== tab.id"
-          />
+          <RouterLink
+            v-for="link in links"
+            :key="link.to"
+            :to="link.to"
+            class="px-4 py-2 rounded-lg transition-all font-medium"
+            :class="isActive(link.to)
+              ? 'bg-primary text-white shadow-md'
+              : 'bg-surface-100 dark:bg-surface-800 text-surface-700 dark:text-surface-200 hover:bg-surface-200 dark:hover:bg-surface-700'"
+          >
+            {{ link.label }}
+          </RouterLink>
         </div>
       </div>
 
-      <!-- Views Container -->
+      <!-- Contenedor de vistas -->
       <div class="bg-surface-0 dark:bg-surface-900 rounded-lg shadow-sm p-6 md:p-8">
-        <!-- Login View -->
-        <div v-if="activeTab === 'login'" class="w-full">
-          <Login />
-        </div>
-
-        <!-- Ticket Offers View -->
-        <div v-if="activeTab === 'offers'" class="w-full">
-          <TicketOffers />
-        </div>
-
-        <!-- Ticket Detail View -->
-        <div v-if="activeTab === 'detail'" class="w-full">
-          <TicketDetail />
-        </div>
-
-        <!-- Checkout View -->
-        <div v-if="activeTab === 'checkout'" class="w-full">
-          <Checkout />
-        </div>
+        <RouterView v-slot="{ Component }">
+          <transition name="view" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </RouterView>
       </div>
     </div>
 =======
@@ -78,36 +66,37 @@ const showNavBar = computed(() => {
 </template>
 
 <script setup>
-import { ref } from "vue";
-import Button from "primevue/button";
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
 
-// <CHANGE> Importar todas las vistas
-import Login from "./views/LoginView.vue";
-import TicketOffers from "./views/TicketOffersView.vue";
-import TicketDetail from "./views/TicketDetailView.vue";
-import Checkout from "./views/CheckoutView.vue";
+const route = useRoute()
 
-// <CHANGE> Control del tab activo
-const activeTab = ref("login");
+// Enlaces de navegación (coinciden con tus rutas definidas)
+const links = [
+  { to: '/TicketOffers', label: '🎟️ Ofertas de Boletos' },
+  { to: '/ticket/:1', label: '📋 Detalle del Boleto' },
+  { to: '/checkout', label: '💳 Checkout' },
+]
 
-// <CHANGE> Configuración de tabs para navegar entre vistas
-const tabs = [
-  { id: "login", label: "🔐 Login" },
-  { id: "offers", label: "🎟️ Ofertas de Boletos" },
-  { id: "detail", label: "📋 Detalle del Boleto" },
-  { id: "checkout", label: "💳 Checkout" },
-];
+// Función para marcar enlace activo
+const isActive = (path) => {
+  return computed(() => route.path === path).value
+}
 </script>
 
 <style scoped>
-/* Animación suave entre vistas */
+/* Transición suave entre vistas */
 .view-enter-active,
 .view-leave-active {
-  transition: opacity 0.2s ease;
+  transition: opacity 0.25s ease;
 }
-
 .view-enter-from,
 .view-leave-to {
   opacity: 0;
 }
-</style>
+
+/* Estilos base */
+.router-link-active {
+  font-weight: 600;
+}
+</style>"
