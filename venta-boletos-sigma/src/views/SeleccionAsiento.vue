@@ -105,6 +105,52 @@
       </p>
     </div>
   </div>
+<div class="bg-transparent border border-gray-400 border rounded-lg p-5 shadow-lg mt-4">
+  <h3 class="text-xl font-bold mb-4"> Resumen de compra</h3>
+
+  <div v-if="loadingPricing" class="text-gray-500">
+    Calculando precios...
+  </div>
+
+  <div v-if="!pricingInfo && !loadingPricing" class="text-gray-500">
+    Selecciona asientos para ver el resumen
+  </div>
+
+  <div v-if="pricingInfo">
+    <table class="w-full text-sm border-collapse mb-4">
+      <thead>
+        <tr class="bg-transparent border border-gray-400 p-4">
+          <th class="p-2 text-left">Asiento ID</th>
+          <th class="p-2 text-left">Precio</th>
+          <th class="p-2 text-left">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="detail in pricingInfo.seat_details"
+          :key="detail.seat_id"
+          class="border-b"
+        >
+          <td class="p-2">{{ detail.seat_id }}</td>
+          <td class="p-2">
+            {{ detail.price }} {{ detail.currency }}
+          </td>
+          <td class="p-2 capitalize">
+            {{ detail.status }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="flex justify-between items-center text-lg font-semibold">
+      <span>Total asientos: {{ pricingInfo.seat_count }}</span>
+      <span>Total: {{ pricingInfo.total_price }} {{ pricingInfo.currency }}</span>
+    </div>
+  </div>
+</div>
+
+<Toast />
+
 </template>
 
 <script setup lang="ts">
@@ -112,6 +158,10 @@ import Card from "primevue/card";
 import Dropdown from "primevue/dropdown";
 import SeatMatrix from "@/components/SeatMatrix.vue";
 import { ref, onMounted } from "vue";
+import { useToast } from "primevue/usetoast";
+import Toast from "primevue/toast";
+
+
 
 interface Stadium {
   id: number;
@@ -134,16 +184,37 @@ interface Row {
   seats: Seat[];
 }
 
+interface SeatPricingDetail {
+  seat_id: number;
+  price: number;
+  currency: string;
+  status: string;
+}
+
+interface PricingResponse {
+  total_price: number;
+  seat_details: SeatPricingDetail[];
+  seat_count: number;
+  currency: string;
+}
+
 const selectedStadium = ref<number | null>(null);
 const selectedArea = ref<number | null>(null);
 const stadiums = ref<Stadium[]>([]);
 const areas = ref<Area[]>([]);
 const dataFromApi = ref<Row[]>([]);
+const selectedSeats = ref<Seat[]>([]);
+
 
 const loading = ref(false);
 const loadingStadiums = ref(false);
 const loadingAreas = ref(false);
 const error = ref<string | null>(null);
+
+const pricingInfo = ref<PricingResponse | null>(null);
+const loadingPricing = ref(false);
+const toast = useToast();
+
 
 const getCurrentStadiumName = () => {
   const stadium = stadiums.value.find((s) => s.id === selectedStadium.value);
@@ -262,9 +333,86 @@ const onAreaChange = () => {
   }
 };
 
-const onSeatSelect = (seat: Seat) => {};
+const onSeatSelect = (seat: Seat) => {
+  const exists = selectedSeats.value.find(s => s.id === seat.id);
+
+  if (!exists) {
+    selectedSeats.value.push(seat);
+  } else {
+    selectedSeats.value = selectedSeats.value.filter(s => s.id !== seat.id);
+  }
+
+  fetchPricing(); 
+};
+
+
 
 onMounted(() => {
   fetchStadiums();
 });
+
+
+const fetchPricing = async () => {
+  if (selectedSeats.value.length === 0) {
+    pricingInfo.value = null;
+    return;
+  }
+
+  loadingPricing.value = true;
+
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/v1/pricing/calculate-total-optimized",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          seat_ids: selectedSeats.value.map(seat => seat.id),
+          match_id: 1,
+        }),
+      }
+    );
+
+    if (!response.ok) throw new Error("Error al calcular precios");
+
+    const data: PricingResponse = await response.json();
+
+    // Filtrar asientos con precio 0
+    const invalidSeats = data.seat_details.filter(seat => seat.price === 0);
+
+    if (invalidSeats.length > 0) {
+      // eliminar asientos inválidos de la selección
+      selectedSeats.value = selectedSeats.value.filter(
+        seat => !invalidSeats.some(i => i.seat_id === seat.id)
+      );
+
+      toast.add({
+        severity: "warn",
+        summary: "Asiento sin precio",
+        detail: "Uno o más asientos no tienen precio asignado y fueron removidos",
+        life: 4000,
+      });
+    }
+
+    //  Asientos válidos
+    const validSeatDetails = data.seat_details.filter(seat => seat.price > 0);
+
+    pricingInfo.value = {
+      ...data,
+      seat_details: validSeatDetails,
+      seat_count: validSeatDetails.length,
+      total_price: validSeatDetails.reduce((acc, s) => acc + s.price, 0)
+    };
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loadingPricing.value = false;
+  }
+};
+
+
 </script>
