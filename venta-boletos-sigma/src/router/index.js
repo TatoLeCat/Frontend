@@ -11,6 +11,11 @@ import QrticketView from "@/views/QrticketView.vue";
 import ScanQrView from "@/views/ScanQRView.vue";
 import EligibilityCriteriaDashboard from '@/views/EligibilityCriteriaDashboard.vue';
 import RaffleAdmin from "@/views/RaffleAdmin.vue";
+import VerifyEmailView from "@/views/VerifyEmailView.vue";
+import Enable2FAView from "@/views/Enable2FAView.vue";
+import 2FAView from "@/views/2FAView.vue";
+
+
 
 // Importación de vistas
 import CheckoutView from '../views/CheckoutView.vue'
@@ -18,11 +23,31 @@ import TicketDetailView from '../views/TicketDetailView.vue'
 import TicketOffersView from '../views/TicketOffersView.vue'
 import StadiumListView from '../views/StadiumListView.vue'
 import StadiumDetailView from '../views/StadiumDetailView.vue'
+import FAView from "@/views/2FAView.vue";
 
 // Configuración de rutas
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+
+    {
+    path: "/2fa",
+    name: "2fa",
+    component: View2FA,
+    },
+
+    {
+    path: "/verify-email",
+    name: "verifyEmail",
+    component: () => import("@/views/VerifyEmailView.vue"),
+    },
+
+    {
+    path: "/enable-2fa",
+    name: "enable2FA",
+    component: () => import("@/views/Enable2FAView.vue"),
+    },
+
     {
       path: "/",
       name: "home",
