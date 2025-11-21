@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <template>
   <div class="bg-surface-50 dark:bg-surface-950 min-h-screen px-6 py-6 md:px-20">
     <div class="max-w-6xl mx-auto">
@@ -49,6 +50,30 @@
         </div>
       </div>
     </div>
+=======
+<script setup>
+import { RouterView, useRoute } from "vue-router";
+import { computed } from "vue";
+import Toast from "primevue/toast";
+import NavBar from "@/components/NavBar.vue";
+
+const route = useRoute();
+
+// Rutas donde NO se debe mostrar el NavBar
+const hideNavBarRoutes = ["/login", "/register"];
+
+// Computed para verificar si se debe mostrar el NavBar
+const showNavBar = computed(() => {
+  return !hideNavBarRoutes.includes(route.path);
+});
+</script>
+
+<template>
+  <div class="min-h-screen">
+    <Toast />
+    <NavBar v-if="showNavBar" />
+    <router-view></router-view>
+>>>>>>> fcd39e340b93ea540b930d888d10430349052984
   </div>
 </template>
 
