@@ -9,6 +9,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import UserTicketView from "@/views/UserTicketView.vue";
 import QrticketView from "@/views/QrticketView.vue";
 import ScanQrView from "@/views/ScanQRView.vue";
+import EligibilityCriteriaDashboard from '@/views/EligibilityCriteriaDashboard.vue';
+import RaffleAdmin from "@/views/RaffleAdmin.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,6 +66,18 @@ const router = createRouter({
       path: "/scan-qr",
       name: "scan-qr",
       component: ScanQrView,
+    },
+    {
+      path: '/admin/eligibility-criteria',
+      name: 'EligibilityCriteriaDashboard',
+      component: EligibilityCriteriaDashboard,
+      meta: { requiresAdmin: true },
+    },
+   {
+      path: '/admin/raffle',
+      name: 'RaffleAdmin',
+      component: RaffleAdmin,
+      meta: { requiresAdmin: true },
     },
   ],
 });
