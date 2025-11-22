@@ -63,7 +63,7 @@ const onCameraOn = () => {
 
 // Error con la cámara
 const onCameraError = (error) => {
-  console.error("❌ Error con la cámara:", error);
+  console.error("Error con la cámara:", error);
   errorMessage.value = "Error al acceder a la cámara";
 };
 
@@ -77,7 +77,7 @@ const onDetect = async (content) => {
 
   try {
     // Llamada al microservicio QR
-    const response = await axios.post("http://localhost:8000/qr/validate", {
+    const response = await axios.post("http://localhost:8080/qr/validate", {
       qr_content: content[0].rawValue,
     });
 

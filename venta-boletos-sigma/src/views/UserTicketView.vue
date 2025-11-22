@@ -39,7 +39,7 @@ const error = ref(null)
 onMounted(async () => {
   try {
     const response = await axios.get(
-      `http://localhost:8000/qr/ticket/${ticketId}`
+      `http://localhost:8080/qr/ticket/${ticketId}`
     )
     ticket.value = response.data
   } catch (err) {

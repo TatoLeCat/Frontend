@@ -64,7 +64,7 @@ const ticket = {
 // =====================================
 async function fetchQR() {
   try {
-    const response = await axios.get("http://localhost:8000/qr/generate", {
+    const response = await axios.get("http://localhost:8080/qr/generate", {
       params: {
         ticket_id: ticket.ticketId,
         event: ticket.eventName,
