@@ -64,18 +64,15 @@ const ticket = {
 // =====================================
 async function fetchQR() {
   try {
-    const response = await axios.get("http://localhost:8080/qr/generate", {
-      params: {
-        ticket_id: ticket.ticketId,
-        event: ticket.eventName,
-        stadium: ticket.stadium,
-        date: ticket.date,
-        owner: ticket.ownerName,
-      },
-      responseType: "blob",
-    });
+    const response = await axios.post("http://localhost:8080/qr/generate", {
+  boleto_id: 1,                
+  evento: ticket.eventName,
+  fecha: ticket.date,
+  ubicacion: ticket.stadium,
+  propietario: ticket.ownerName,
+});
 
-    qrImage.value = URL.createObjectURL(response.data);
+qrImage.value = "data:image/png;base64," + response.data.qr_base64;
   } catch (error) {
     console.error("Error generando el QR:", error);
   }

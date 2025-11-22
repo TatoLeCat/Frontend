@@ -23,7 +23,7 @@ import TicketDetailView from '../views/TicketDetailView.vue'
 import TicketOffersView from '../views/TicketOffersView.vue'
 import StadiumListView from '../views/StadiumListView.vue'
 import StadiumDetailView from '../views/StadiumDetailView.vue'
-import FAView from "@/views/Perfil2FAView.vue";
+import Perfil2FAView from "@/views/Perfil2FAView.vue";
 
 // Configuración de rutas
 const router = createRouter({
@@ -33,7 +33,7 @@ const router = createRouter({
     {
     path: "/perfil-2fa",
     name: "perfil2fa",
-    component: View2FA,
+    component: Perfil2FAView,
     },
 
     {

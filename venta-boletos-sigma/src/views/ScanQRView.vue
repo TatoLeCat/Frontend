@@ -68,22 +68,21 @@ const onCameraError = (error) => {
 };
 
 // Cuando detecta un QR
-const onDetect = async (content) => {
-  console.log("QR Detectado:", content);
+const onDetect = async (detectedCodes) => {
+  const qrImageBase64 = detectedCodes[0].imageDataUrl; // trae la imagen en base64
 
   loading.value = true;
-  successMessage.value = "";
-  errorMessage.value = "";
 
   try {
-    // Llamada al microservicio QR
     const response = await axios.post("http://localhost:8080/qr/validate", {
-      qr_content: content[0].rawValue,
+      qr_base64: qrImageBase64.split(",")[1],
     });
 
-    successMessage.value = response.data.message;
+    successMessage.value = response.data.valid
+      ? "QR válido, acceso permitido"
+      : "QR inválido";
   } catch (err) {
-    errorMessage.value = err.response?.data?.detail || "QR inválido";
+    errorMessage.value = "Error al validar QR";
   }
 
   loading.value = false;
