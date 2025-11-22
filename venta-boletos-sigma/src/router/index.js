@@ -1,3 +1,5 @@
+import { createRouter, createWebHistory } from "vue-router";
+
 import SeleccionAsiento from "@/views/SeleccionAsiento.vue";
 import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
@@ -5,49 +7,43 @@ import HomeView from "@/views/HomeView.vue";
 import PartidosView from "@/views/PartidosView.vue";
 import PerfilView from "@/views/PerfilView.vue";
 import HistorialView from "@/views/HistorialView.vue";
-import { createRouter, createWebHistory } from "vue-router";
 import UserTicketView from "@/views/UserTicketView.vue";
 import QrticketView from "@/views/QrticketView.vue";
 import ScanQrView from "@/views/ScanQRView.vue";
-import EligibilityCriteriaDashboard from '@/views/EligibilityCriteriaDashboard.vue';
+import EligibilityCriteriaDashboard from "@/views/EligibilityCriteriaDashboard.vue";
 import RaffleAdmin from "@/views/RaffleAdmin.vue";
 import VerifyEmailView from "@/views/VerifyEmailView.vue";
 import Enable2FAView from "@/views/Enable2FAView.vue";
-import Perfil2FAView2FAView from "@/views/Perfil2FAView.vue";
+import Perfil2FAView from "@/views/Perfil2FAView.vue";
 
+// Vistas demo de boletos
+import CheckoutView from "@/views/CheckoutView.vue";
+import TicketDetailView from "@/views/TicketDetailView.vue";
+import TicketOffersView from "@/views/TicketOffersView.vue";
+import StadiumListView from "@/views/StadiumListView.vue";
+import StadiumDetailView from "@/views/StadiumDetailView.vue";
 
-
-// Importación de vistas
-import CheckoutView from '../views/CheckoutView.vue'
-import TicketDetailView from '../views/TicketDetailView.vue'
-import TicketOffersView from '../views/TicketOffersView.vue'
-import StadiumListView from '../views/StadiumListView.vue'
-import StadiumDetailView from '../views/StadiumDetailView.vue'
-import FAView from "@/views/Perfil2FAView.vue";
-
-// Configuración de rutas
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-
+    // 2FA / Auth util
     {
-    path: "/perfil-2fa",
-    name: "perfil2fa",
-    component: View2FA,
+      path: "/perfil-2fa",
+      name: "perfil2fa",
+      component: Perfil2FAView,
+    },
+    {
+      path: "/verify-email",
+      name: "verifyEmail",
+      component: VerifyEmailView,
+    },
+    {
+      path: "/enable-2fa",
+      name: "enable2FA",
+      component: Enable2FAView,
     },
 
-    {
-    path: "/verify-email",
-    name: "verifyEmail",
-    component: () => import("@/views/VerifyEmailView.vue"),
-    },
-
-    {
-    path: "/enable-2fa",
-    name: "enable2FA",
-    component: () => import("@/views/Enable2FAView.vue"),
-    },
-
+    // Core app
     {
       path: "/",
       name: "home",
@@ -70,7 +66,7 @@ const router = createRouter({
     },
     {
       path: "/seleccionAsiento",
-      name: "seleccionAsisnto",
+      name: "seleccionAsiento",
       component: SeleccionAsiento,
     },
     {
@@ -84,45 +80,41 @@ const router = createRouter({
       component: RegisterView,
     },
 
+    // Flujos de boletos / demo
     {
-      path: '/TicketOffers',
-      name: 'TicketOffers', 
+      path: "/TicketOffers",
+      name: "TicketOffers",
       component: TicketOffersView,
     },
-
     {
-      path: '/checkout',
-      name: 'Checkout',
+      path: "/checkout",
+      name: "Checkout",
       component: CheckoutView,
     },
     {
-      path: '/ticket/:id', 
-      name: 'TicketDetail',
+      path: "/ticket/:id",
+      name: "TicketDetail",
       component: TicketDetailView,
-      props: true, 
+      props: true,
     },
     {
-      path: '/',
-      redirect: '/stadiums'
+      path: "/stadiums",
+      name: "StadiumList",
+      component: StadiumListView,
     },
     {
-      path: '/stadiums',
-      name: 'StadiumList',
-      component: StadiumListView
-    },
-    {
-      path: '/stadiums/:id',
-      name: 'StadiumDetail',
+      path: "/stadiums/:id",
+      name: "StadiumDetail",
       component: StadiumDetailView,
-      props: true
+      props: true,
     },
 
+    // Tickets del usuario
     {
       path: "/ticket",
       name: "ticket",
       component: UserTicketView,
     },
-
     {
       path: "/ticket/qr/:id",
       name: "ticket-qr",
@@ -134,18 +126,21 @@ const router = createRouter({
       name: "scan-qr",
       component: ScanQrView,
     },
+
+    // Admin
     {
-      path: '/admin/eligibility-criteria',
-      name: 'EligibilityCriteriaDashboard',
+      path: "/admin/eligibility-criteria",
+      name: "EligibilityCriteriaDashboard",
       component: EligibilityCriteriaDashboard,
       meta: { requiresAdmin: true },
     },
-   {
-      path: '/admin/raffle',
-      name: 'RaffleAdmin',
+    {
+      path: "/admin/raffle",
+      name: "RaffleAdmin",
       component: RaffleAdmin,
       meta: { requiresAdmin: true },
     },
   ],
 });
+
 export default router;
