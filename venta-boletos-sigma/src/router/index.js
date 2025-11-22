@@ -13,7 +13,7 @@ import EligibilityCriteriaDashboard from '@/views/EligibilityCriteriaDashboard.v
 import RaffleAdmin from "@/views/RaffleAdmin.vue";
 import VerifyEmailView from "@/views/VerifyEmailView.vue";
 import Enable2FAView from "@/views/Enable2FAView.vue";
-import 2FAView from "@/views/2FAView.vue";
+import Perfil2FAView2FAView from "@/views/Perfil2FAView.vue";
 
 
 
@@ -23,7 +23,7 @@ import TicketDetailView from '../views/TicketDetailView.vue'
 import TicketOffersView from '../views/TicketOffersView.vue'
 import StadiumListView from '../views/StadiumListView.vue'
 import StadiumDetailView from '../views/StadiumDetailView.vue'
-import FAView from "@/views/2FAView.vue";
+import FAView from "@/views/Perfil2FAView.vue";
 
 // Configuración de rutas
 const router = createRouter({
@@ -31,8 +31,8 @@ const router = createRouter({
   routes: [
 
     {
-    path: "/2fa",
-    name: "2fa",
+    path: "/perfil-2fa",
+    name: "perfil2fa",
     component: View2FA,
     },
 
