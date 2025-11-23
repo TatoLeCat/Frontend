@@ -1,11 +1,12 @@
 <template>
-  <div class="raffle-admin">
-    <header class="header">
-      <h1>Run Raffle</h1>
-      <p class="hint">
-        Only admins with a valid API token can run raffles and see audit history.
-      </p>
-    </header>
+  <div class="raffle-admin-view">
+    <div class="raffle-admin">
+      <header class="header">
+        <h1>Run Raffle</h1>
+        <p class="hint">
+          Only admins with a valid API token can run raffles and see audit history.
+        </p>
+      </header>
 
     <!-- Formulario para correr rifa -->
     <section class="card">
@@ -105,6 +106,7 @@
 
       <p v-else class="muted">No raffle runs have been logged yet.</p>
     </section>
+    </div>
   </div>
 </template>
 
@@ -211,6 +213,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.raffle-admin-view {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+}
+
 .raffle-admin {
   max-width: 1100px;
   margin: 0 auto;
@@ -222,11 +230,16 @@ onMounted(() => {
 
 .header h1 {
   margin: 0;
+  color: white;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .hint {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
 }
 
 .card {

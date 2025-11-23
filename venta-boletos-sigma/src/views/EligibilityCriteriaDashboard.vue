@@ -1,13 +1,14 @@
 <template>
-  <div class="criteria-dashboard">
-    <header class="criteria-header">
-      <h1>Eligibility Criteria</h1>
-      <!-- Si en el futuro agregas endpoint POST /criteria, aquí va el botón de crear -->
-      <!-- <button class="btn btn-primary" @click="openCreateModal">+ New criterion</button> -->
-      <p class="hint">
-        Only admins with a valid API token can edit criteria.
-      </p>
-    </header>
+  <div class="criteria-dashboard-view">
+    <div class="criteria-dashboard">
+      <header class="criteria-header">
+        <h1>Eligibility Criteria</h1>
+        <!-- Si en el futuro agregas endpoint POST /criteria, aquí va el botón de crear -->
+        <!-- <button class="btn btn-primary" @click="openCreateModal">+ New criterion</button> -->
+        <p class="hint">
+          Only admins with a valid API token can edit criteria.
+        </p>
+      </header>
 
     <section v-if="loading" class="state state-loading">
       Loading criteria...
@@ -157,6 +158,7 @@
           <button class="btn" @click="closeAuditModal">Close</button>
         </div>
       </div>
+    </div>
     </div>
   </div>
 </template>
@@ -378,11 +380,21 @@ onMounted(fetchCriteria)
 </script>
 
 <style scoped>
+.criteria-dashboard-view {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+}
+
 .criteria-dashboard {
   max-width: 1100px;
   margin: 0 auto;
   padding: 1.5rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
+
 .criteria-header {
   display: flex;
   flex-direction: column;
@@ -391,6 +403,7 @@ onMounted(fetchCriteria)
 }
 .criteria-header h1 {
   margin: 0;
+  color: #1f2937;
 }
 .hint {
   font-size: 0.8rem;

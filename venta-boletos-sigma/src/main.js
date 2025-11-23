@@ -5,8 +5,6 @@ import router from "./router";
 import PrimeVue from "primevue/config";
 import Lara from "@primeuix/themes/lara";
 import ToastService from "primevue/toastservice";
-import "bootstrap";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 
 
 const app = createApp(App);
