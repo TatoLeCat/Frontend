@@ -49,7 +49,7 @@
         </div>
 
         <button type="submit" class="pay-btn" :disabled="loading">
-          {{ loading ? "Procesando..." : "Pagar ahora" }}
+          {{ loading ? "Procesando..." : "Continuar al Pago" }}
         </button>
       </form>
 
@@ -124,23 +124,28 @@ async function onSubmit() {
   loading.value = true;
 
   try {
-    const token = buildPaymentToken();
+    // Validar información del comprador
+    if (!buyerName.value || !buyerEmail.value || !buyerPhone.value) {
+      throw new Error("Por favor complete todos los datos del comprador");
+    }
 
-    const response = await processPayment({
-      ticket_id: ticketId.value,
-      user_id: userId.value,
-      amount: amount.value,
-      currency: currency.value,
-      payment_token: token,
+    // Navegar a la vista de pago con la información del checkout
+    router.push({
+      name: 'Payment',
+      query: {
+        ticketId: ticketId.value,
+        userId: userId.value,
+        amount: amount.value,
+        currency: currency.value,
+        buyerName: buyerName.value,
+        buyerEmail: buyerEmail.value,
+        buyerPhone: buyerPhone.value
+      }
     });
-
-    result.value = response;
 
   } catch (e: any) {
     console.error(e);
-    error.value =
-      e?.response?.data?.detail ??
-      "Ocurrió un error al procesar el pago. Intente nuevamente.";
+    error.value = e?.message ?? "Ocurrió un error. Intente nuevamente.";
   } finally {
     loading.value = false;
   }
@@ -150,11 +155,12 @@ async function onSubmit() {
 <style scoped>
 /* Layout principal */
 .checkout-wrapper {
-  background: #111; /* Fondo oscuro */
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #000;
   padding: 2rem;
   display: flex;
   justify-content: center;
+  min-height: 100vh;
 }
 
 /* Tarjeta principal */

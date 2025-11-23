@@ -89,16 +89,55 @@ const items = ref([
     command: () => router.push("/partidos"),
   },
   {
-    label: "Mi Perfil",
-    icon: "pi pi-user",
-    route: "/perfil",
-    command: () => router.push("/perfil"),
+    label: "Comprar Boletos",
+    icon: "pi pi-shopping-cart",
+    items: [
+      {
+        label: "Estadios",
+        icon: "pi pi-building",
+        route: "/stadiums",
+        command: () => router.push("/stadiums"),
+      },
+      {
+        label: "Ofertas de Boletos",
+        icon: "pi pi-tag",
+        route: "/ticket-offers",
+        command: () => router.push("/ticket-offers"),
+      },
+    ],
   },
   {
-    label: "Historial",
-    icon: "pi pi-receipt",
-    route: "/historial",
-    command: () => router.push("/historial"),
+    label: "Mis Tickets",
+    icon: "pi pi-ticket",
+    route: "/mis-tickets",
+    command: () => router.push("/mis-tickets"),
+  },
+  {
+    label: "Mi Cuenta",
+    icon: "pi pi-user",
+    items: [
+      {
+        label: "Perfil",
+        icon: "pi pi-user-edit",
+        route: "/perfil",
+        command: () => router.push("/perfil"),
+      },
+      {
+        label: "Historial",
+        icon: "pi pi-history",
+        route: "/historial",
+        command: () => router.push("/historial"),
+      },
+      {
+        separator: true,
+      },
+      {
+        label: "Seguridad (2FA)",
+        icon: "pi pi-shield",
+        route: "/perfil-2fa",
+        command: () => router.push("/perfil-2fa"),
+      },
+    ],
   },
 ]);
 

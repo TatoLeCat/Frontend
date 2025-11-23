@@ -38,15 +38,16 @@
       </button>
     </form>
 
-    <section v-if="result" class="payment-result">
-      <h2>Resultado del pago</h2>
+    <section v-if="result" class="payment-result" :class="{ 'success': result.status === 'approved' }">
+      <h2>{{ result.status === 'approved' ? '✓ Pago Exitoso' : '✗ Pago Rechazado' }}</h2>
       <p><strong>Estado:</strong> {{ result.status }}</p>
       <p><strong>Mensaje:</strong> {{ result.message }}</p>
       <p><strong>ID transacción:</strong> {{ result.transaction_id }}</p>
       <p><strong>Fecha:</strong> {{ result.created_at }}</p>
 
       <div v-if="result.qr_payload">
-        <h3>QR generado</h3>
+        <h3>✓ QR generado exitosamente</h3>
+        <p class="redirect-msg">Redirigiendo a "Mis Tickets" en unos segundos...</p>
         <!-- Por ahora mostramos el payload en texto.
              Más adelante podemos convertir esto en imagen QR -->
         <pre>{{ result.qr_payload }}</pre>
@@ -64,17 +65,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
+import { ref, computed, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { processPayment, type PaymentResponseDto } from "@/services/paymentService";
 
 // 🚩 Aquí es donde conectamos con tu flujo real:
 const route = useRoute();
-const ticketId = computed(() => Number(route.params.ticketId));
-// TODO: reemplazar estas constantes con datos reales (store/API):
-const userId = ref<number>(1);
-const amount = ref<number>(100.0);
-const currency = ref<string>("USD");
+const router = useRouter();
+const ticketId = computed(() => Number(route.query.ticketId));
+const userId = computed(() => Number(route.query.userId));
+const amount = computed(() => Number(route.query.amount) || 100.0);
+const currency = computed(() => String(route.query.currency) || "USD");
 
 const cardholderName = ref("");
 const cardNumber = ref("");
@@ -113,6 +114,16 @@ async function onSubmit() {
     });
 
     result.value = response;
+
+    // Si el pago fue exitoso, redirigir a "Mis Tickets" después de 2 segundos
+    if (response.status === 'approved' && response.qr_payload) {
+      setTimeout(() => {
+        router.push({
+          name: 'ticket',
+          query: { paymentSuccess: 'true' }
+        });
+      }, 2000);
+    }
   } catch (e: any) {
     console.error(e);
     error.value =
@@ -131,6 +142,9 @@ async function onSubmit() {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .ticket-summary,
@@ -164,5 +178,25 @@ button {
 .error {
   color: red;
   font-weight: 600;
+}
+
+.payment-result.success {
+  background: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.payment-result.success h2 {
+  color: #155724;
+}
+
+.redirect-msg {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+  font-weight: 600;
+  color: #856404;
+  text-align: center;
 }
 </style>

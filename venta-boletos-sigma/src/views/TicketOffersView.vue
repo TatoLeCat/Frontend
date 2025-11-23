@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-surface-50 dark:bg-surface-950 px-6 py-12 md:px-20 lg:px-80">
+  <div class="ticket-offers-view px-6 py-12 md:px-20 lg:px-80">
     <div class="flex flex-col gap-8 w-full max-w-6xl mx-auto">
       <!-- Header -->
       <div class="flex flex-col gap-2">
@@ -319,3 +319,19 @@ const goToCheckout = (ticket) => {
   });
 };
 </script>
+
+<style scoped>
+.ticket-offers-view {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Ajustar colores de texto para mejor contraste con el gradiente */
+.ticket-offers-view h1 {
+  color: white !important;
+}
+
+.ticket-offers-view p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+</style>

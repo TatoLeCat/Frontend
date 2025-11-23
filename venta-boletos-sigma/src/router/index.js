@@ -1,36 +1,49 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import SeleccionAsiento from "@/views/SeleccionAsiento.vue";
+// Autenticación y Seguridad
 import LoginView from "@/views/LoginView.vue";
 import RegisterView from "@/views/RegisterView.vue";
-import HomeView from "@/views/HomeView.vue";
-import PartidosView from "@/views/PartidosView.vue";
-import PerfilView from "@/views/PerfilView.vue";
-import HistorialView from "@/views/HistorialView.vue";
-import UserTicketView from "@/views/UserTicketView.vue";
-import QrticketView from "@/views/QrticketView.vue";
-import ScanQrView from "@/views/ScanQRView.vue";
-import EligibilityCriteriaDashboard from "@/views/EligibilityCriteriaDashboard.vue";
-import RaffleAdmin from "@/views/RaffleAdmin.vue";
 import VerifyEmailView from "@/views/VerifyEmailView.vue";
 import Enable2FAView from "@/views/Enable2FAView.vue";
 import Perfil2FAView from "@/views/Perfil2FAView.vue";
 
-// Views demo de boletos
-import CheckoutView from "@/views/CheckoutView.vue";
-import TicketDetailView from "@/views/TicketDetailView.vue";
-import TicketOffersView from "@/views/TicketOffersView.vue";
+// Vistas Principales
+import HomeView from "@/views/HomeView.vue";
+import PartidosView from "@/views/PartidosView.vue";
+import PerfilView from "@/views/PerfilView.vue";
+import HistorialView from "@/views/HistorialView.vue";
+
+// Flujo de Compra de Boletos
 import StadiumListView from "@/views/StadiumListView.vue";
 import StadiumDetailView from "@/views/StadiumDetailView.vue";
+import TicketOffersView from "@/views/TicketOffersView.vue";
+import TicketDetailView from "@/views/TicketDetailView.vue";
+import SeleccionAsiento from "@/views/SeleccionAsiento.vue";
+import CheckoutView from "@/views/CheckoutView.vue";
+import PaymentView from "@/views/PaymentView.vue";
+
+// Gestión de Tickets del Usuario
+import UserTicketView from "@/views/UserTicketView.vue";
+import QrticketView from "@/views/QrticketView.vue";
+import ScanQrView from "@/views/ScanQRView.vue";
+
+// Administración
+import EligibilityCriteriaDashboard from "@/views/EligibilityCriteriaDashboard.vue";
+import RaffleAdmin from "@/views/RaffleAdmin.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    // 2FA / Auth util
+    // ===== AUTENTICACIÓN Y SEGURIDAD =====
     {
-      path: "/perfil-2fa",
-      name: "perfil2fa",
-      component: Perfil2FAView,
+      path: "/login",
+      name: "login",
+      component: LoginView,
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: RegisterView,
     },
     {
       path: "/verify-email",
@@ -42,8 +55,13 @@ const router = createRouter({
       name: "enable2FA",
       component: Enable2FAView,
     },
+    {
+      path: "/perfil-2fa",
+      name: "perfil2fa",
+      component: Perfil2FAView,
+    },
 
-    // Core app
+    // ===== VISTAS PRINCIPALES =====
     {
       path: "/",
       name: "home",
@@ -64,39 +82,9 @@ const router = createRouter({
       name: "historial",
       component: HistorialView,
     },
-    {
-      path: "/seleccionAsiento",
-      name: "seleccionAsiento",
-      component: SeleccionAsiento,
-    },
-    {
-      path: "/login",
-      name: "login",
-      component: LoginView,
-    },
-    {
-      path: "/register",
-      name: "register",
-      component: RegisterView,
-    },
 
-    // Flujos de boletos / demo
-    {
-      path: "/TicketOffers",
-      name: "TicketOffers",
-      component: TicketOffersView,
-    },
-    {
-      path: "/checkout",
-      name: "Checkout",
-      component: CheckoutView,
-    },
-    {
-      path: "/ticket/:id",
-      name: "TicketDetail",
-      component: TicketDetailView,
-      props: true,
-    },
+    // ===== FLUJO DE COMPRA DE BOLETOS =====
+    // 1. Explorar estadios
     {
       path: "/stadiums",
       name: "StadiumList",
@@ -108,10 +96,39 @@ const router = createRouter({
       component: StadiumDetailView,
       props: true,
     },
-
-    // Tickets del usuario
+    // 2. Ver ofertas de boletos
     {
-      path: "/ticket",
+      path: "/ticket-offers",
+      name: "TicketOffers",
+      component: TicketOffersView,
+    },
+    {
+      path: "/ticket/:id",
+      name: "TicketDetail",
+      component: TicketDetailView,
+      props: true,
+    },
+    // 3. Seleccionar asiento
+    {
+      path: "/seleccion-asiento",
+      name: "seleccionAsiento",
+      component: SeleccionAsiento,
+    },
+    // 4. Checkout y pago
+    {
+      path: "/checkout",
+      name: "Checkout",
+      component: CheckoutView,
+    },
+    {
+      path: "/payment",
+      name: "Payment",
+      component: PaymentView,
+    },
+
+    // ===== GESTIÓN DE TICKETS DEL USUARIO =====
+    {
+      path: "/mis-tickets",
       name: "ticket",
       component: UserTicketView,
     },
@@ -127,7 +144,7 @@ const router = createRouter({
       component: ScanQrView,
     },
 
-    // Admin
+    // ===== ADMINISTRACIÓN =====
     {
       path: "/admin/eligibility-criteria",
       name: "EligibilityCriteriaDashboard",

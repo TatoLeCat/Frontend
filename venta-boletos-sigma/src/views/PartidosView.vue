@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-surface-50 dark:bg-surface-950 min-h-screen px-6 py-8">
+  <div class="partidos-view min-h-screen px-6 py-8">
     <div class="max-w-7xl mx-auto">
       <div class="mb-8">
         <h1
@@ -46,3 +46,19 @@
 </template>
 
 <script setup></script>
+
+<style scoped>
+.partidos-view {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.partidos-view h1,
+.partidos-view h3 {
+  color: white !important;
+}
+
+.partidos-view p,
+.partidos-view span {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+</style>
