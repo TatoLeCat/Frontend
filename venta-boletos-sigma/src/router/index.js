@@ -30,6 +30,7 @@ import ScanQrView from "@/views/ScanQRView.vue";
 // Administración
 import EligibilityCriteriaDashboard from "@/views/EligibilityCriteriaDashboard.vue";
 import RaffleAdmin from "@/views/RaffleAdmin.vue";
+import TicketStatusView from "@/views/TicketStatusView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -157,11 +158,11 @@ const router = createRouter({
       component: RaffleAdmin,
       meta: { requiresAdmin: true },
     },
-  //      {
-  //    path: '/tickets',
-  //    name: 'Tickets',
-  //    component: TicketsView
-  //  },
+        {
+      path: '/ticketsStatusControl',
+      name: 'TicketsStatusControl',
+      component: TicketStatusView
+    },
   ],
 });
 

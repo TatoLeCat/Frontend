@@ -2,14 +2,14 @@
   <div class="container mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900">Gestión de Tickets</h1>
-      <p class="text-gray-600 mt-2">
+      <h1 class="text-3xl font-bold text-gray-200">Gestión de Tickets</h1>
+      <p class="text-gray-300 mt-2">
         Gestiona y filtra todos los tickets del sistema
       </p>
     </div>
 
-    <!-- Filtros por Estado -->
-    <div class="mb-6 bg-white p-4 rounded-lg shadow border">
+    <!-- Filtros por Estado bg-primary-100 dark:bg-primary-500/30 -->
+    <div class="mb-6 bg-primary-900 p-4 rounded-lg shadow border">
       <h3 class="text-lg font-semibold mb-3">Filtrar por Estado:</h3>
       <div class="flex flex-wrap gap-2">
         <button
@@ -36,7 +36,7 @@
 
     <!-- Contador y Estadísticas -->
     <div class="mb-4 flex justify-between items-center">
-      <div class="text-sm text-gray-600">
+      <div class="text-sm text-gray-300">
         Mostrando {{ filteredTickets.length }} de {{ tickets.length }} tickets
       </div>
       <button
@@ -84,7 +84,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import TicketCard from '@/components/tickets/TicketCard.vue'
+import TicketCard from '../components/TicketCard.vue'
 
 // Estado reactivo
 const tickets = ref([])
@@ -143,7 +143,7 @@ const fetchTickets = async () => {
   
   try {
     // Reemplaza esto con tu llamada real a la API
-    const response = await fetch('http://localhost:8000/api/tickets/')
+    const response = await fetch('http://localhost:8000/api/tickets/all/tickets')
     if (!response.ok) throw new Error('Error al cargar tickets')
     
     tickets.value = await response.json()
