@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-surface-50 dark:bg-surface-950 min-h-screen px-6 py-8">
+  <div class="home-view min-h-screen px-6 py-8">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-12">
         <h1
@@ -78,4 +78,17 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 </script>
 
-<style scoped></style>
+<style scoped>
+.home-view {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.home-view h1,
+.home-view h3 {
+  color: white !important;
+}
+
+.home-view p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+</style>

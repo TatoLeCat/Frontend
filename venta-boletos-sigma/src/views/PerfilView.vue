@@ -1,10 +1,13 @@
 <template>
-  <div class="bg-surface-50 dark:bg-surface-950 min-h-screen px-6 py-8">
-    <div class="max-w-3xl mx-auto">
-      <Toast ref="toast" />
-      <div class="mb-6">
-        <h1 class="text-surface-900 dark:text-surface-0 text-3xl font-bold mb-2">Mi Perfil</h1>
-        <p class="text-surface-600 dark:text-surface-400">Gestiona tu información personal</p>
+  <div class="perfil-view min-h-screen px-6 py-8">
+    <div class="max-w-4xl mx-auto">
+      <div class="mb-8">
+        <h1 class="text-surface-900 dark:text-surface-0 text-3xl font-bold mb-2">
+          Mi Perfil
+        </h1>
+        <p class="text-surface-600 dark:text-surface-400">
+          Gestiona tu información personal
+        </p>
       </div>
 
       <div class="bg-surface-0 dark:bg-surface-900 rounded-lg shadow-sm p-6 border border-surface-200 dark:border-surface-700">
@@ -96,22 +99,23 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import AuthService from '@/services/AuthService'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
-import Toast from 'primevue/toast'
+import { useToast } from 'primevue/usetoast'
 
 const user = reactive({ name: '', email: '', avatar: '' })
 const editing = ref(false)
 const form = reactive({ name: '', email: '', avatar: '' })
 const errors = reactive({ name: '', email: '' })
 const previewImage = ref(null)
-const fileInput = ref(null)
-const toast = ref(null)
+const toast = useToast()
 
 const password = reactive({ current: '', new: '', confirm: '' })
 const passwordMessage = ref('')
+const router = useRouter()
 
 onMounted(() => {
   const u = AuthService.getUser() || {}
@@ -179,7 +183,7 @@ function saveProfile() {
   user.email = updated.email
   user.avatar = updated.avatar || ''
   editing.value = false
-  toast.value?.add({ severity: 'success', summary: 'Perfil', detail: 'Perfil actualizado correctamente.', life: 3000 })
+  toast.add({ severity: 'success', summary: 'Perfil', detail: 'Perfil actualizado correctamente.', life: 3000 })
 }
 
 function changePassword() {
@@ -205,15 +209,30 @@ function changePassword() {
   password.new = ''
   password.confirm = ''
   passwordMessage.value = ''
-  toast.value?.add({ severity: 'success', summary: 'Contraseña', detail: 'Contraseña actualizada correctamente.', life: 3000 })
+  toast.add({ severity: 'success', summary: 'Contraseña', detail: 'Contraseña actualizada correctamente.', life: 3000 })
 }
 
 function deleteAccount() {
   if (!confirm('¿Estás seguro de eliminar la cuenta? Esta acción es irreversible (mock).')) return
   // Mock remove
   AuthService.logout()
-  // Optionally redirect to login or home (no router import here to keep this view self-contained)
-  alert('Cuenta eliminada (mock). Se ha cerrado la sesión.')
-  window.location.href = '/login'
+  // Show toast and redirect via router for SPA navigation
+  toast.add({ severity: 'info', summary: 'Cuenta', detail: 'Cuenta eliminada (mock).', life: 3000 })
+  router.push('/login')
 }
 </script>
+
+<style scoped>
+.perfil-view {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.perfil-view h1,
+.perfil-view h2 {
+  color: white !important;
+}
+
+.perfil-view > div > div > p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+</style>
