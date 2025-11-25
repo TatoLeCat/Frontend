@@ -1,6 +1,7 @@
 <template>
   <div class="bg-surface-50 dark:bg-surface-950 min-h-screen px-6 py-8">
     <div class="max-w-3xl mx-auto">
+      <Toast ref="toast" />
       <div class="mb-6">
         <h1 class="text-surface-900 dark:text-surface-0 text-3xl font-bold mb-2">Mi Perfil</h1>
         <p class="text-surface-600 dark:text-surface-400">Gestiona tu información personal</p>
@@ -17,8 +18,8 @@
             <p class="text-surface-600 dark:text-surface-400">Información de tu cuenta</p>
           </div>
           <div>
-            <button v-if="!editing" @click="startEdit" class="btn btn-primary">Editar</button>
-            <button v-else @click="cancelEdit" class="btn btn-ghost">Cancelar</button>
+            <Button v-if="!editing" @click="startEdit" icon="pi pi-pencil" label="Editar" class="p-button-outlined" />
+            <Button v-else @click="cancelEdit" icon="pi pi-times" label="Cancelar" class="p-button-secondary" />
           </div>
         </div>
 
@@ -26,12 +27,12 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="text-sm font-medium text-surface-700 dark:text-surface-300">Nombre</label>
-              <input v-model="form.name" :disabled="!editing" type="text" class="input w-full mt-1" />
+              <InputText v-model="form.name" :disabled="!editing" class="w-full mt-1" />
               <p v-if="errors.name" class="text-sm text-red-500 mt-1">{{ errors.name }}</p>
             </div>
             <div>
               <label class="text-sm font-medium text-surface-700 dark:text-surface-300">Email</label>
-              <input v-model="form.email" :disabled="!editing" type="email" class="input w-full mt-1" />
+              <InputText v-model="form.email" :disabled="!editing" type="email" class="w-full mt-1" />
               <p v-if="errors.email" class="text-sm text-red-500 mt-1">{{ errors.email }}</p>
             </div>
           </div>
@@ -47,9 +48,9 @@
           </div>
 
           <div class="flex items-center gap-4">
-            <button v-if="editing" type="submit" class="btn btn-primary">Guardar</button>
-            <button v-if="editing" type="button" @click="resetForm" class="btn btn-ghost">Restablecer</button>
-            <div v-if="successMessage" class="ml-auto text-green-600">{{ successMessage }}</div>
+            <Button v-if="editing" type="submit" icon="pi pi-check" label="Guardar" class="p-button-success" />
+            <Button v-if="editing" type="button" @click="resetForm" icon="pi pi-undo" label="Restablecer" class="p-button-text" />
+            <div class="ml-auto"></div>
           </div>
         </form>
 
@@ -60,18 +61,18 @@
           <form @submit.prevent="changePassword" class="space-y-3 max-w-md">
             <div>
               <label class="text-sm">Contraseña actual</label>
-              <input v-model="password.current" type="password" class="input w-full mt-1" />
+              <Password v-model="password.current" toggleMask class="w-full mt-1" />
             </div>
             <div>
               <label class="text-sm">Nueva contraseña</label>
-              <input v-model="password.new" type="password" class="input w-full mt-1" />
+              <Password v-model="password.new" toggleMask :feedback="false" class="w-full mt-1" />
             </div>
             <div>
               <label class="text-sm">Confirmar nueva contraseña</label>
-              <input v-model="password.confirm" type="password" class="input w-full mt-1" />
+              <Password v-model="password.confirm" toggleMask class="w-full mt-1" />
             </div>
             <div class="flex items-center gap-3">
-              <button type="submit" class="btn btn-secondary">Cambiar contraseña</button>
+              <Button type="submit" icon="pi pi-key" label="Cambiar contraseña" class="p-button-warning" />
               <p v-if="passwordMessage" class="text-sm text-red-500">{{ passwordMessage }}</p>
             </div>
           </form>
@@ -85,7 +86,7 @@
             <p class="text-sm text-surface-600">Esta acción es irreversible (mock).</p>
           </div>
           <div>
-            <button @click="deleteAccount" class="btn btn-danger">Eliminar cuenta</button>
+            <Button @click="deleteAccount" icon="pi pi-trash" label="Eliminar cuenta" class="p-button-danger" />
           </div>
         </div>
       </div>
@@ -96,14 +97,18 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import AuthService from '@/services/AuthService'
+import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
+import Password from 'primevue/password'
+import Toast from 'primevue/toast'
 
 const user = reactive({ name: '', email: '', avatar: '' })
 const editing = ref(false)
 const form = reactive({ name: '', email: '', avatar: '' })
 const errors = reactive({ name: '', email: '' })
-const successMessage = ref('')
 const previewImage = ref(null)
 const fileInput = ref(null)
+const toast = ref(null)
 
 const password = reactive({ current: '', new: '', confirm: '' })
 const passwordMessage = ref('')
@@ -121,7 +126,6 @@ onMounted(() => {
 
 function startEdit() {
   editing.value = true
-  successMessage.value = ''
 }
 
 function cancelEdit() {
@@ -175,8 +179,7 @@ function saveProfile() {
   user.email = updated.email
   user.avatar = updated.avatar || ''
   editing.value = false
-  successMessage.value = 'Perfil actualizado correctamente.'
-  setTimeout(() => (successMessage.value = ''), 4000)
+  toast.value?.add({ severity: 'success', summary: 'Perfil', detail: 'Perfil actualizado correctamente.', life: 3000 })
 }
 
 function changePassword() {
@@ -202,8 +205,7 @@ function changePassword() {
   password.new = ''
   password.confirm = ''
   passwordMessage.value = ''
-  successMessage.value = 'Contraseña actualizada correctamente.'
-  setTimeout(() => (successMessage.value = ''), 4000)
+  toast.value?.add({ severity: 'success', summary: 'Contraseña', detail: 'Contraseña actualizada correctamente.', life: 3000 })
 }
 
 function deleteAccount() {
