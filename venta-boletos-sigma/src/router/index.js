@@ -45,6 +45,11 @@ const router = createRouter({
       name: "register",
       component: RegisterView,
     },
+  //      {
+  //    path: '/tickets',
+  //    name: 'Tickets',
+  //    component: TicketsView
+  //  },
   ],
 });
 export default router;
