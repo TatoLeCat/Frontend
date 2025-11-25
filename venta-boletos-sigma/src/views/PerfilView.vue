@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-surface-50 dark:bg-surface-950 min-h-screen px-6 py-8">
+  <div class="perfil-view min-h-screen px-6 py-8">
     <div class="max-w-4xl mx-auto">
       <div class="mb-8">
         <h1 class="text-surface-900 dark:text-surface-0 text-3xl font-bold mb-2">
@@ -60,3 +60,18 @@ onMounted(() => {
   user.value = AuthService.getUser();
 });
 </script>
+
+<style scoped>
+.perfil-view {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.perfil-view h1,
+.perfil-view h2 {
+  color: white !important;
+}
+
+.perfil-view > div > div > p {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+</style>
