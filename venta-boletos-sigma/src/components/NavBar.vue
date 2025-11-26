@@ -57,17 +57,17 @@
 import Menubar from "primevue/menubar";
 import Button from "primevue/button";
 import Badge from "primevue/badge";
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useToast } from "primevue/usetoast";
-import AuthService from "@/services/AuthService";
+import AuthService, { isAuthenticated as authState } from "@/services/AuthService";
 
 const router = useRouter();
 const route = useRoute();
 const toast = useToast();
 
-// Verificar si el usuario está autenticado
-const isAuthenticated = computed(() => AuthService.isAuthenticated());
+// Estado de autenticación reactivo
+const isAuthenticated = authState;
 
 // Función para verificar si una ruta está activa
 const isActiveRoute = (routePath) => {

@@ -91,7 +91,7 @@
 <script setup>
 import { ref } from "vue";
 import { QrcodeStream } from "vue-qrcode-reader";
-import { validarQR } from "@/services/QRService.js";
+import { validarQR } from "@/services/QRService";
 
 // Estados
 const loading = ref(false);

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import AuthService from "@/services/AuthService";
 
 // Autenticación y Seguridad
 import LoginView from "@/views/LoginView.vue";
@@ -29,6 +30,10 @@ import ScanQrView from "@/views/ScanQRView.vue";
 import EligibilityCriteriaDashboard from "@/views/EligibilityCriteriaDashboard.vue";
 import RaffleAdmin from "@/views/RaffleAdmin.vue";
 import TicketStatusView from "@/views/TicketStatusView.vue";
+
+// Torneo - Fases y Equipos
+import TournamentPhasesView from "@/views/TournamentPhasesView.vue";
+import PhaseDetailView from "@/views/PhaseDetailView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -146,12 +151,50 @@ const router = createRouter({
       component: RaffleAdmin,
       meta: { requiresAdmin: true },
     },
-        {
+
+    // ===== TORNEO - FASES Y EQUIPOS =====
+    {
+      path: "/fases",
+      name: "TournamentPhases",
+      component: TournamentPhasesView,
+    },
+    {
+      path: "/fases/:id",
+      name: "PhaseDetail",
+      component: PhaseDetailView,
+      props: true,
+    },
+    {
       path: '/ticketsStatusControl',
       name: 'TicketsStatusControl',
-      component: TicketStatusView
+      component: TicketStatusView,
     },
   ],
+});
+
+// Navigation Guard para proteger rutas
+router.beforeEach((to, _from, next) => {
+  // Rutas públicas que NO requieren autenticación
+  const publicRoutes = ["/", "/login", "/register", "/verify-email"];
+
+  // Verificar si la ruta requiere autenticación
+  const requiresAuth = !publicRoutes.includes(to.path);
+
+  // Verificar si el usuario está autenticado
+  const isAuthenticated = AuthService.isAuthenticated();
+
+  if (requiresAuth && !isAuthenticated) {
+    // Si la ruta requiere autenticación y el usuario no está autenticado,
+    // redirigir a login
+    next("/login");
+  } else if ((to.path === "/login" || to.path === "/register") && isAuthenticated) {
+    // Si el usuario está autenticado e intenta acceder a login o register,
+    // redirigir a home
+    next("/");
+  } else {
+    // Permitir acceso
+    next();
+  }
 });
 
 export default router;
