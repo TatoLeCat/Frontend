@@ -34,3 +34,7 @@ npm run dev
 ```sh
 npm run build
 ```
+### instalar esta dependencia
+```sh
+npm install vue-qrcode-reader
+```
