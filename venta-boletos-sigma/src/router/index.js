@@ -20,10 +20,8 @@ import TicketOffersView from "@/views/TicketOffersView.vue";
 import TicketDetailView from "@/views/TicketDetailView.vue";
 import SeleccionAsiento from "@/views/SeleccionAsiento.vue";
 import CheckoutView from "@/views/CheckoutView.vue";
-import PaymentView from "@/views/PaymentView.vue";
 
 // Gestión de Tickets del Usuario
-import UserTicketView from "@/views/UserTicketView.vue";
 import QrticketView from "@/views/QrticketView.vue";
 import ScanQrView from "@/views/ScanQRView.vue";
 
@@ -121,20 +119,10 @@ const router = createRouter({
       name: "Checkout",
       component: CheckoutView,
     },
-    {
-      path: "/payment",
-      name: "Payment",
-      component: PaymentView,
-    },
 
     // ===== GESTIÓN DE TICKETS DEL USUARIO =====
     {
-      path: "/mis-tickets",
-      name: "ticket",
-      component: UserTicketView,
-    },
-    {
-      path: "/ticket/qr/:id",
+      path: "/ticket/qr",
       name: "ticket-qr",
       component: QrticketView,
       props: true,

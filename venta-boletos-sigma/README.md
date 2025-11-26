@@ -38,3 +38,6 @@ npm run build
 ```sh
 npm install vue-qrcode-reader
 ```
+```sh
+npm install jspdf
+```

@@ -1,18 +1,19 @@
+// src/services/qrService.js
 import api from "./api";
 
-export async function generarQR(payload) {
-  try {
-    const response = await api.post("/qr/generate", payload);
-    return response.data;
-  } catch (error) {
-    console.error("Error generando QR:", error);
-    throw error;
-  }
-}
+// ⚠ YA NO SE USA generarQR() — el QR lo genera el backend Payment
+// export async function generarQR(payload) {
+//   const response = await api.post("/qr/generate", payload);
+//   return response.data;
+// }
 
-export async function obtenerQR(idBoleto) {
+/**
+ * Obtener QR ya generado por Payment
+ * GET /qr/:id
+ */
+export async function obtenerQR(ticketId) {
   try {
-    const response = await api.get(`/qr/${idBoleto}`);
+    const response = await api.get(`/qr/${ticketId}`);
     return response.data;
   } catch (error) {
     console.error("Error obteniendo QR:", error);
@@ -20,10 +21,14 @@ export async function obtenerQR(idBoleto) {
   }
 }
 
+/**
+ * Validar QR en el estadio
+ * POST /qr/validate
+ */
 export async function validarQR(payload) {
   try {
     const response = await api.post("/qr/validate", payload);
-    return response.data; // { valid: true/false, message: "..." }
+    return response.data;
   } catch (error) {
     console.error("Error validando QR:", error);
     throw error;
