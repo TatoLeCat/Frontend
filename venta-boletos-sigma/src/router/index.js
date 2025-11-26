@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import AuthService from "@/services/AuthService";
 
 // Autenticación y Seguridad
 import LoginView from "@/views/LoginView.vue";
@@ -181,6 +182,31 @@ const router = createRouter({
       component: TicketStatusView,
     },
   ],
+});
+
+// Navigation Guard para proteger rutas
+router.beforeEach((to, _from, next) => {
+  // Rutas públicas que NO requieren autenticación
+  const publicRoutes = ["/", "/login", "/register", "/verify-email"];
+
+  // Verificar si la ruta requiere autenticación
+  const requiresAuth = !publicRoutes.includes(to.path);
+
+  // Verificar si el usuario está autenticado
+  const isAuthenticated = AuthService.isAuthenticated();
+
+  if (requiresAuth && !isAuthenticated) {
+    // Si la ruta requiere autenticación y el usuario no está autenticado,
+    // redirigir a login
+    next("/login");
+  } else if ((to.path === "/login" || to.path === "/register") && isAuthenticated) {
+    // Si el usuario está autenticado e intenta acceder a login o register,
+    // redirigir a home
+    next("/");
+  } else {
+    // Permitir acceso
+    next();
+  }
 });
 
 export default router;

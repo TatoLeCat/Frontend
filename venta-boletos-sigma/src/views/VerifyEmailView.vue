@@ -13,7 +13,9 @@
 
     <div v-if="status === 'error'" class="error">
       <h2>Token inválido o expirado</h2>
-      <button @click="resendVerification">Reenviar correo de verificación</button>
+      <button @click="resendVerification">
+        Reenviar correo de verificación
+      </button>
     </div>
   </div>
 </template>
@@ -22,6 +24,8 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 const route = useRoute();
 
@@ -32,7 +36,7 @@ onMounted(async () => {
   const token = route.query.token;
 
   try {
-    await axios.get(`http://localhost:8000/auth/verify-email?token=${token}`);
+    await axios.get(`${API_URL}/auth/verify-email?token=${token}`);
     status.value = "success";
   } catch (e) {
     status.value = "error";
@@ -42,7 +46,7 @@ onMounted(async () => {
 });
 
 async function resendVerification() {
-  await axios.post("http://localhost:8000/auth/resend-verification", {
+  await axios.post(`${API_URL}/auth/resend-verification`, {
     email: localStorage.getItem("email"),
   });
   alert("Correo reenviado");
