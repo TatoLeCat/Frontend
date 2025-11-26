@@ -5,7 +5,7 @@
 ## Primero entra en la carpeta venta boletos sigma
 
 ```sh
-cd .\\venta-boletos-sigma\\
+cd .\venta-boletos-sigma\
 ```
 
 ## Luego instala dependencias dentro de venta-boletos-sigma
