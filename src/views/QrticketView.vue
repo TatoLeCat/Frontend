@@ -41,13 +41,13 @@
           <span class="value">{{ ticket.date }}</span>
         </div>
 
-        <!-- NUEVO -->
+        <!-- NUEVO: Fecha -->
         <div class="info-row">
           <span class="label">Fecha de Compra:</span>
           <span class="value">{{ fechaCompra }}</span>
         </div>
 
-        <!-- NUEVO -->
+        <!-- NUEVO: Hora -->
         <div class="info-row">
           <span class="label">Hora de Compra:</span>
           <span class="value">{{ horaCompra }}</span>
@@ -63,38 +63,32 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 
-// =====================================
-// Estado
-// =====================================
 const qrImage = ref(null);
 const fechaCompra = ref(null);
 const horaCompra = ref(null);
 
-// Datos del ticket (demo, luego vendrán desde tu backend real)
+// ⚠ ticketId DEBE SER UN NÚMERO porque el backend espera boleto_id:int
 const ticket = {
-  ticketId: "TCK-982173",
+  ticketId: 1,
   eventName: "Copa Mundial – Fase de Grupos",
   stadium: "Estadio Internacional",
   date: "2025-06-18",
   ownerName: "Nohely Reyes",
 };
 
-// =====================================
-// Consumir Microservicio QR
-// =====================================
 async function fetchQR() {
   try {
     const response = await axios.post("http://localhost:8080/qr/generate", {
-      boleto_id: 1,
+      boleto_id: ticket.ticketId,
       evento: ticket.eventName,
       fecha: ticket.date,
       ubicacion: ticket.stadium,
-      propietario: ticket.ownerName
+      propietario: ticket.ownerName,
     });
 
     qrImage.value = "data:image/png;base64," + response.data.qr_base64;
 
-    // NUEVO: valores generados por el backend
+    // NUEVO: Datos de compra enviados por backend
     fechaCompra.value = response.data.fecha_compra;
     horaCompra.value = response.data.hora_compra;
 
