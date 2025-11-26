@@ -31,6 +31,10 @@ import ScanQrView from "@/views/ScanQRView.vue";
 import EligibilityCriteriaDashboard from "@/views/EligibilityCriteriaDashboard.vue";
 import RaffleAdmin from "@/views/RaffleAdmin.vue";
 
+// Torneo - Fases y Equipos
+import TournamentPhasesView from "@/views/TournamentPhasesView.vue";
+import PhaseDetailView from "@/views/PhaseDetailView.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -156,6 +160,19 @@ const router = createRouter({
       name: "RaffleAdmin",
       component: RaffleAdmin,
       meta: { requiresAdmin: true },
+    },
+
+    // ===== TORNEO - FASES Y EQUIPOS =====
+    {
+      path: "/fases",
+      name: "TournamentPhases",
+      component: TournamentPhasesView,
+    },
+    {
+      path: "/fases/:id",
+      name: "PhaseDetail",
+      component: PhaseDetailView,
+      props: true,
     },
   ],
 });
