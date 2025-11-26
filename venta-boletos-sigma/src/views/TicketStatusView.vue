@@ -149,53 +149,7 @@ const fetchTickets = async () => {
     tickets.value = await response.json()
   } catch (err) {
     error.value = err.message
-    // Para desarrollo, usar datos de ejemplo
-    tickets.value = [
-      {
-        "order_id": 102,
-        "seat_id": 502,
-        "owner_user_id": 1,
-        "qr_payload": "PENDING_QR",
-        "signature": null,
-        "status": "available",
-        "id": 2,
-        "created_at": "2025-11-22T05:33:55.794579Z",
-        "updated_at": "2025-11-24T21:07:33.216708Z"
-      },
-      {
-        "order_id": 1,
-        "seat_id": 1,
-        "owner_user_id": 1,
-        "qr_payload": "QR|ticket=7|user=1|seat=1",
-        "signature": "FAKE_SIGNATURE_DEV",
-        "status": "isused",
-        "id": 7,
-        "created_at": "2025-11-24T23:28:55.237713Z",
-        "updated_at": "2025-11-25T17:18:01.795491Z"
-      },
-      {
-        "order_id": 1,
-        "seat_id": 1,
-        "owner_user_id": 1,
-        "qr_payload": "QR|ticket=8|user=1|seat=1",
-        "signature": "FAKE_SIGNATURE_DEV",
-        "status": "isused",
-        "id": 8,
-        "created_at": "2025-11-24T23:31:59.466964Z",
-        "updated_at": "2025-11-25T17:18:19.706753Z"
-      },
-      {
-        "order_id": 1,
-        "seat_id": 1,
-        "owner_user_id": 1,
-        "qr_payload": "QR|ticket=9|user=1|seat=1",
-        "signature": "FAKE_SIGNATURE_DEV",
-        "status": "isused",
-        "id": 9,
-        "created_at": "2025-11-24T23:32:03.370294Z",
-        "updated_at": "2025-11-25T17:18:25.494196Z"
-      }
-    ]
+    
   } finally {
     loading.value = false
   }
