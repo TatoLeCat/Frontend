@@ -30,6 +30,7 @@ import ScanQrView from "@/views/ScanQRView.vue";
 // Administración
 import EligibilityCriteriaDashboard from "@/views/EligibilityCriteriaDashboard.vue";
 import RaffleAdmin from "@/views/RaffleAdmin.vue";
+import TicketStatusView from "@/views/TicketStatusView.vue";
 
 // Torneo - Fases y Equipos
 import TournamentPhasesView from "@/views/TournamentPhasesView.vue";
@@ -173,6 +174,11 @@ const router = createRouter({
       name: "PhaseDetail",
       component: PhaseDetailView,
       props: true,
+    },
+    {
+      path: '/ticketsStatusControl',
+      name: 'TicketsStatusControl',
+      component: TicketStatusView,
     },
   ],
 });

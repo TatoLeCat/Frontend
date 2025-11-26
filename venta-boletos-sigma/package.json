@@ -19,6 +19,7 @@
     "primevue": "^4.4.1",
     "tailwindcss": "^4.1.16",
     "vue": "^3.5.22",
+    "vue-qrcode-reader": "^5.7.3",
     "vue-router": "^4.6.3"
   },
   "devDependencies": {

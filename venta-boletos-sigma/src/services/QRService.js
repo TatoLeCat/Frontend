@@ -20,12 +20,9 @@ export async function obtenerQR(idBoleto) {
   }
 }
 
-export async function validarQR(qrBase64) {
+export async function validarQR(payload) {
   try {
-    const response = await api.post("/qr/validate", {
-      qr_base64: qrBase64,
-    });
-
+    const response = await api.post("/qr/validate", payload);
     return response.data; // { valid: true/false, message: "..." }
   } catch (error) {
     console.error("Error validando QR:", error);
