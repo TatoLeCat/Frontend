@@ -38,6 +38,12 @@ import TicketStatusView from "@/views/TicketStatusView.vue";
 import TournamentPhasesView from "@/views/TournamentPhasesView.vue";
 import PhaseDetailView from "@/views/PhaseDetailView.vue";
 
+//CE
+// Reguistrar equipos y resultados 
+import MatchResultView from "@/views/MatchResultView.vue";
+import TeamRegisterView from "@/views/TeamRegisterView.vue";
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -172,6 +178,23 @@ const router = createRouter({
       component: RaffleAdmin,
       meta: { requiresAdmin: true },
     },
+
+    // CE===== NUEVA RUTA PARA REGISTRAR EQUIPOS Y RESULTADOS =====
+    // ===== NUEVA RUTA PARA REGISTRAR EQUIPOS =====
+    {
+     path: "/admin/register-team",
+     name: "RegisterTeam",
+     component: TeamRegisterView,
+     meta: { requiresAdmin: true },
+    },
+// ===== NUEVA RUTA PARA REGISTRAR RESULTADOS =====
+    {
+    path: "/admin/match-result",
+    name: "MatchResult",
+    component: MatchResultView,
+    meta: { requiresAdmin: true },
+    },
+
 
     // ===== TORNEO - FASES Y EQUIPOS =====
     {
