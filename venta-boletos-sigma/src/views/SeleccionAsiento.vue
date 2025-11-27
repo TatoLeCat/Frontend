@@ -262,10 +262,8 @@ const goToCheckout = () => {
   router.push({
     name: "Checkout",
     query: {
-      matchId,
-      areaId: selectedArea.value,
-      seatIds: JSON.stringify(selectedSeatsList.value.map(s => s.id)),
-      amount: totalAmount.value
+    ticketIds: JSON.stringify(selectedSeatsList.value.map(s => s.id)),
+    amount: totalAmount.value
     }
   });
 };
