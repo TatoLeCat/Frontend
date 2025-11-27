@@ -34,8 +34,6 @@ import EligibilityCriteriaDashboard from "@/views/EligibilityCriteriaDashboard.v
 import RaffleAdmin from "@/views/RaffleAdmin.vue";
 import TicketStatusView from "@/views/TicketStatusView.vue";
 
-// Torneo - Fases y Equipos
-import PhaseDetailView from "@/views/PhaseDetailView.vue";
 
 //CE
 // Reguistrar equipos y resultados 
@@ -196,12 +194,6 @@ const router = createRouter({
 
 
     // ===== TORNEO - FASES Y EQUIPOS =====
-    {
-      path: "/fases/:id",
-      name: "PhaseDetail",
-      component: PhaseDetailView,
-      props: true,
-    },
     {
       path: '/ticketsStatusControl',
       name: 'TicketsStatusControl',
