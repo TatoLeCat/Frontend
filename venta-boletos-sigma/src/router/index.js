@@ -35,7 +35,6 @@ import RaffleAdmin from "@/views/RaffleAdmin.vue";
 import TicketStatusView from "@/views/TicketStatusView.vue";
 
 // Torneo - Fases y Equipos
-import TournamentPhasesView from "@/views/TournamentPhasesView.vue";
 import PhaseDetailView from "@/views/PhaseDetailView.vue";
 
 //CE
@@ -197,11 +196,6 @@ const router = createRouter({
 
 
     // ===== TORNEO - FASES Y EQUIPOS =====
-    {
-      path: "/fases",
-      name: "TournamentPhases",
-      component: TournamentPhasesView,
-    },
     {
       path: "/fases/:id",
       name: "PhaseDetail",
