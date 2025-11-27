@@ -28,7 +28,7 @@
     <Card v-if="hasRaffleAssignment" class="bg-white shadow-md">
       <template #content>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          
+
           <!-- Estadio -->
           <div class="flex flex-col gap-2">
             <label class="font-semibold text-gray-700">Estadio</label>
@@ -92,8 +92,25 @@
       </div>
     </div>
 
-    <!-- MATRIZ DE ASIENTOS -->
-    <div v-if="hasRaffleAssignment && dataFromApi.length > 0 && !loading">
+    <!-- NUEVO: STADIUM MAP PRO -->
+    <div
+      v-if="hasRaffleAssignment && dataFromApi.length > 0 && !loading"
+      class="bg-white shadow-lg rounded-lg p-4 border border-gray-200"
+    >
+      <h2 class="text-xl font-bold mb-4 text-gray-800">Mapa Interactivo del Estadio</h2>
+
+      <StadiumMapPro
+        :seats="dataFromApi"
+        :selectedSeats="selectedSeats"
+        @select="toggleSeat"
+      />
+    </div>
+
+    <!-- MATRIZ DE ASIENTOS (fallback o modo lista) -->
+    <div
+      v-if="hasRaffleAssignment && dataFromApi.length > 0 && !loading"
+      class="mt-6"
+    >
       <Card class="w-full shadow-lg">
         <template #content>
           <SeatMatrix
@@ -131,11 +148,9 @@
       <h2 class="text-xl font-bold mb-3">Resumen de Compra</h2>
 
       <ul class="mb-4">
-        <li v-for="seat in selectedSeatsList" :key="seat.id">
-          <span class="text-pink-600 font-bold">
-            Asiento: {{ seat.seat_number }}
-          </span>
-          <span class="ml-3 text-gray-700">Precio: L. 100</span>
+        <li v-for="seat in selectedSeatsList" :key="seat.id" class="flex justify-between">
+          <span class="text-blue-700 font-bold">Asiento: {{ seat.seat_number }}</span>
+          <span class="text-gray-700">Precio: L. 100</span>
         </li>
       </ul>
 
@@ -143,7 +158,7 @@
 
       <button
         @click="goToCheckout"
-        class="mt-4 bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-lg font-bold"
+        class="mt-4 bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-lg font-bold w-full"
       >
         Ir a pagar
       </button>
@@ -159,6 +174,7 @@ import Dropdown from "primevue/dropdown";
 import Message from "primevue/message";
 import Button from "primevue/button";
 import SeatMatrix from "@/components/SeatMatrix.vue";
+import StadiumMapPro from "@/components/StadiumMapPro.vue"; 
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import AuthService from "@/services/AuthService";
