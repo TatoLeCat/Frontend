@@ -39,9 +39,12 @@ import TournamentPhasesView from "@/views/TournamentPhasesView.vue";
 import PhaseDetailView from "@/views/PhaseDetailView.vue";
 
 //CE
-// Reguistrar equipos y resultados 
+// Registrar equipos y resultados
 import MatchResultView from "@/views/MatchResultView.vue";
 import TeamRegisterView from "@/views/TeamRegisterView.vue";
+import MatchRegisterView from "@/views/MatchRegisterView.vue";
+import PhaseManagementView from "@/views/PhaseManagementView.vue";
+import StandingsView from "@/views/StandingsView.vue";
 
 
 const router = createRouter({
@@ -179,20 +182,41 @@ const router = createRouter({
       meta: { requiresAdmin: true },
     },
 
-    // CE===== NUEVA RUTA PARA REGISTRAR EQUIPOS Y RESULTADOS =====
-    // ===== NUEVA RUTA PARA REGISTRAR EQUIPOS =====
+    // CE ===== RUTAS PARA GESTIÓN DE TORNEO =====
+    // Registrar Equipos
     {
-     path: "/admin/register-team",
-     name: "RegisterTeam",
-     component: TeamRegisterView,
-     meta: { requiresAdmin: true },
+      path: "/admin/register-team",
+      name: "RegisterTeam",
+      component: TeamRegisterView,
+      meta: { requiresAdmin: true },
     },
-// ===== NUEVA RUTA PARA REGISTRAR RESULTADOS =====
+    // Registrar Partidos
     {
-    path: "/admin/match-result",
-    name: "MatchResult",
-    component: MatchResultView,
-    meta: { requiresAdmin: true },
+      path: "/admin/register-match",
+      name: "RegisterMatch",
+      component: MatchRegisterView,
+      meta: { requiresAdmin: true },
+    },
+    // Registrar Resultados
+    {
+      path: "/admin/match-results",
+      name: "MatchResults",
+      component: MatchResultView,
+      meta: { requiresAdmin: true },
+    },
+    // Gestión de Fases
+    {
+      path: "/admin/phase-management",
+      name: "PhaseManagement",
+      component: PhaseManagementView,
+      meta: { requiresAdmin: true },
+    },
+    // Tabla de Posiciones (Admin)
+    {
+      path: "/admin/standings",
+      name: "AdminStandings",
+      component: StandingsView,
+      meta: { requiresAdmin: true },
     },
 
 
@@ -207,6 +231,12 @@ const router = createRouter({
       name: "PhaseDetail",
       component: PhaseDetailView,
       props: true,
+    },
+    // Tabla de Posiciones (Público)
+    {
+      path: "/tabla-posiciones",
+      name: "Standings",
+      component: StandingsView,
     },
     {
       path: '/ticketsStatusControl',

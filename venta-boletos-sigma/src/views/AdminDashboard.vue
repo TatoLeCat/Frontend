@@ -32,10 +32,135 @@
         </template>
       </Card>
 
-      <!-- Card: Bitácora de Eventos -->
+      <!-- Card: Registrar Equipos -->
+      <Card class="admin-card hover:shadow-lg transition-shadow cursor-pointer">
+        <template #header>
+          <div class="p-6 bg-blue-500 text-white rounded-t-lg">
+            <i class="pi pi-shield text-5xl"></i>
+          </div>
+        </template>
+        <template #title>
+          <h2 class="text-2xl font-semibold">Registrar Equipos</h2>
+        </template>
+        <template #content>
+          <p class="text-surface-600 dark:text-surface-400 mb-4">
+            Añade nuevos equipos al torneo y gestiona el listado de equipos
+            participantes.
+          </p>
+          <Button
+            label="Registrar Equipos"
+            icon="pi pi-arrow-right"
+            class="w-full"
+            severity="info"
+            @click="router.push('/admin/register-team')"
+          />
+        </template>
+      </Card>
+
+      <!-- Card: Registrar Partidos -->
       <Card class="admin-card hover:shadow-lg transition-shadow cursor-pointer">
         <template #header>
           <div class="p-6 bg-green-500 text-white rounded-t-lg">
+            <i class="pi pi-calendar-plus text-5xl"></i>
+          </div>
+        </template>
+        <template #title>
+          <h2 class="text-2xl font-semibold">Registrar Partidos</h2>
+        </template>
+        <template #content>
+          <p class="text-surface-600 dark:text-surface-400 mb-4">
+            Crea nuevos partidos programando equipos, estadios, fechas y fases del
+            torneo.
+          </p>
+          <Button
+            label="Crear Partido"
+            icon="pi pi-arrow-right"
+            class="w-full"
+            severity="success"
+            @click="router.push('/admin/register-match')"
+          />
+        </template>
+      </Card>
+
+      <!-- Card: Registrar Resultados -->
+      <Card class="admin-card hover:shadow-lg transition-shadow cursor-pointer">
+        <template #header>
+          <div class="p-6 bg-yellow-500 text-white rounded-t-lg">
+            <i class="pi pi-pencil text-5xl"></i>
+          </div>
+        </template>
+        <template #title>
+          <h2 class="text-2xl font-semibold">Registrar Resultados</h2>
+        </template>
+        <template #content>
+          <p class="text-surface-600 dark:text-surface-400 mb-4">
+            Actualiza los marcadores finales de los partidos ya disputados en el
+            torneo.
+          </p>
+          <Button
+            label="Ingresar Resultados"
+            icon="pi pi-arrow-right"
+            class="w-full"
+            severity="warning"
+            @click="router.push('/admin/match-results')"
+          />
+        </template>
+      </Card>
+
+      <!-- Card: Gestión de Fases -->
+      <Card class="admin-card hover:shadow-lg transition-shadow cursor-pointer">
+        <template #header>
+          <div class="p-6 bg-purple-500 text-white rounded-t-lg">
+            <i class="pi pi-sitemap text-5xl"></i>
+          </div>
+        </template>
+        <template #title>
+          <h2 class="text-2xl font-semibold">Gestión de Fases</h2>
+        </template>
+        <template #content>
+          <p class="text-surface-600 dark:text-surface-400 mb-4">
+            Administra el avance del torneo entre fases y clasifica equipos
+            automáticamente.
+          </p>
+          <Button
+            label="Gestionar Fases"
+            icon="pi pi-arrow-right"
+            class="w-full"
+            severity="help"
+            @click="router.push('/admin/phase-management')"
+          />
+        </template>
+      </Card>
+
+      <!-- Card: Tabla de Posiciones -->
+      <Card class="admin-card hover:shadow-lg transition-shadow cursor-pointer">
+        <template #header>
+          <div class="p-6 bg-indigo-500 text-white rounded-t-lg">
+            <i class="pi pi-table text-5xl"></i>
+          </div>
+        </template>
+        <template #title>
+          <h2 class="text-2xl font-semibold">Tabla de Posiciones</h2>
+        </template>
+        <template #content>
+          <p class="text-surface-600 dark:text-surface-400 mb-4">
+            Consulta las clasificaciones y estadísticas de los equipos en la Fase de
+            Grupos.
+          </p>
+          <Button
+            label="Ver Clasificación"
+            icon="pi pi-arrow-right"
+            class="w-full"
+            severity="secondary"
+            @click="router.push('/admin/standings')"
+          />
+        </template>
+      </Card>
+
+      <!-- Card: Bitácora de Eventos -->
+      <Card class="admin-card hover:shadow-lg transition-shadow cursor-pointer">
+        <template #header>
+          <div class="p-6 bg-teal-500 text-white rounded-t-lg">
             <i class="pi pi-file-edit text-5xl"></i>
           </div>
         </template>
@@ -85,7 +210,7 @@
       <!-- Card: Sorteos -->
       <Card class="admin-card hover:shadow-lg transition-shadow cursor-pointer">
         <template #header>
-          <div class="p-6 bg-purple-500 text-white rounded-t-lg">
+          <div class="p-6 bg-pink-500 text-white rounded-t-lg">
             <i class="pi pi-gift text-5xl"></i>
           </div>
         </template>
@@ -101,7 +226,7 @@
             label="Administrar Sorteos"
             icon="pi pi-arrow-right"
             class="w-full"
-            severity="help"
+            severity="danger"
             @click="router.push('/admin/raffle')"
           />
         </template>
@@ -146,31 +271,6 @@
               @click="disconnectWebSocket"
             />
           </div>
-        </template>
-      </Card>
-
-      <!-- Card: Estadísticas -->
-      <Card class="admin-card hover:shadow-lg transition-shadow">
-        <template #header>
-          <div class="p-6 bg-pink-500 text-white rounded-t-lg">
-            <i class="pi pi-chart-bar text-5xl"></i>
-          </div>
-        </template>
-        <template #title>
-          <h2 class="text-2xl font-semibold">Estadísticas</h2>
-        </template>
-        <template #content>
-          <p class="text-surface-600 dark:text-surface-400 mb-4">
-            Visualiza métricas y estadísticas del sistema de venta de boletos.
-          </p>
-          <Button
-            label="Ver Estadísticas"
-            icon="pi pi-arrow-right"
-            class="w-full"
-            severity="danger"
-            disabled
-          />
-          <small class="text-surface-500">Próximamente disponible</small>
         </template>
       </Card>
     </div>

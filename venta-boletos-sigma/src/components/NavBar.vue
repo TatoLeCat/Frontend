@@ -137,6 +137,12 @@ const items = computed(() => {
       command: () => router.push("/partidos"),
     },
     {
+      label: "Tabla de Posiciones",
+      icon: "pi pi-table",
+      route: "/tabla-posiciones",
+      command: () => router.push("/tabla-posiciones"),
+    },
+    {
       label: "Comprar Boletos",
       icon: "pi pi-shopping-cart",
       items: [
