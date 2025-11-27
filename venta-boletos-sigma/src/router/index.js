@@ -213,6 +213,13 @@ const router = createRouter({
       name: 'TicketsStatusControl',
       component: TicketStatusView,
     },
+
+    {
+      path: "/seleccionar-asiento/:matchId",
+      name: "SelectSeats",
+      component: () => import("@/views/SeleccionAsiento.vue"),
+      props: true
+    },
   ],
 });
 
