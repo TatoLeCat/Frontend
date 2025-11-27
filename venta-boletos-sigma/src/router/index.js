@@ -27,6 +27,9 @@ import QrticketView from "@/views/QrticketView.vue";
 import ScanQrView from "@/views/ScanQRView.vue";
 
 // Administración
+import AdminDashboard from "@/views/AdminDashboard.vue";
+import AdminTicketManager from "@/views/AdminTicketManager.vue";
+import AdminAuditLogs from "@/views/AdminAuditLogs.vue";
 import EligibilityCriteriaDashboard from "@/views/EligibilityCriteriaDashboard.vue";
 import RaffleAdmin from "@/views/RaffleAdmin.vue";
 import TicketStatusView from "@/views/TicketStatusView.vue";
@@ -140,6 +143,24 @@ const router = createRouter({
 
     // ===== ADMINISTRACIÓN =====
     {
+      path: "/admin",
+      name: "AdminDashboard",
+      component: AdminDashboard,
+      meta: { requiresAdmin: true },
+    },
+    {
+      path: "/admin/tickets",
+      name: "AdminTicketManager",
+      component: AdminTicketManager,
+      meta: { requiresAdmin: true },
+    },
+    {
+      path: "/admin/audit-logs",
+      name: "AdminAuditLogs",
+      component: AdminAuditLogs,
+      meta: { requiresAdmin: true },
+    },
+    {
       path: "/admin/eligibility-criteria",
       name: "EligibilityCriteriaDashboard",
       component: EligibilityCriteriaDashboard,
@@ -183,18 +204,35 @@ router.beforeEach((to, _from, next) => {
   // Verificar si el usuario está autenticado
   const isAuthenticated = AuthService.isAuthenticated();
 
+  // Verificar si la ruta requiere permisos de admin
+  const requiresAdmin = to.matched.some((record) => record.meta.requiresAdmin);
+
+  // 1. Si la ruta requiere autenticación y el usuario no está autenticado
   if (requiresAuth && !isAuthenticated) {
-    // Si la ruta requiere autenticación y el usuario no está autenticado,
-    // redirigir a login
     next("/login");
-  } else if ((to.path === "/login" || to.path === "/register") && isAuthenticated) {
-    // Si el usuario está autenticado e intenta acceder a login o register,
-    // redirigir a home
-    next("/");
-  } else {
-    // Permitir acceso
-    next();
+    return;
   }
+
+  // 2. Si el usuario está autenticado e intenta acceder a login o register
+  if ((to.path === "/login" || to.path === "/register") && isAuthenticated) {
+    next("/");
+    return;
+  }
+
+  // 3. Si la ruta requiere permisos de admin
+  if (requiresAdmin) {
+    const isAdmin = AuthService.isAdmin();
+
+    if (!isAdmin) {
+      // Usuario no es admin, redirigir al home con mensaje de error
+      console.warn("Acceso denegado: Se requieren permisos de administrador");
+      next("/");
+      return;
+    }
+  }
+
+  // 4. Permitir acceso
+  next();
 });
 
 export default router;

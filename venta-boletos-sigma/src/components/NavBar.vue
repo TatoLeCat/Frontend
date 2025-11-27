@@ -57,7 +57,7 @@
 import Menubar from "primevue/menubar";
 import Button from "primevue/button";
 import Badge from "primevue/badge";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import AuthService, { isAuthenticated as authState } from "@/services/AuthService";
@@ -69,77 +69,133 @@ const toast = useToast();
 // Estado de autenticación reactivo
 const isAuthenticated = authState;
 
+// Verificar si el usuario es administrador
+const isAdmin = computed(() => AuthService.isAdmin());
+
 // Función para verificar si una ruta está activa
 const isActiveRoute = (routePath) => {
   return route.path === routePath;
 };
 
-// Menú de navegación
-const items = ref([
-  {
-    label: "Inicio",
-    icon: "pi pi-home",
-    route: "/",
-    command: () => router.push("/"),
-  },
-  {
-    label: "Partidos",
-    icon: "pi pi-calendar",
-    route: "/partidos",
-    command: () => router.push("/partidos"),
-  },
-  {
-    label: "Comprar Boletos",
-    icon: "pi pi-shopping-cart",
-    items: [
-      {
-        label: "Estadios",
-        icon: "pi pi-building",
-        route: "/stadiums",
-        command: () => router.push("/stadiums"),
-      },
-      {
-        label: "Ofertas de Boletos",
-        icon: "pi pi-tag",
-        route: "/ticket-offers",
-        command: () => router.push("/ticket-offers"),
-      },
-    ],
-  },
-  {
-    label: "Mis Tickets",
-    icon: "pi pi-ticket",
-    route: "/mis-tickets",
-    command: () => router.push("/mis-tickets"),
-  },
-  {
-    label: "Mi Cuenta",
-    icon: "pi pi-user",
-    items: [
-      {
-        label: "Perfil",
-        icon: "pi pi-user-edit",
-        route: "/perfil",
-        command: () => router.push("/perfil"),
-      },
-      {
-        label: "Historial",
-        icon: "pi pi-history",
-        route: "/historial",
-        command: () => router.push("/historial"),
-      },
-      {
-        separator: true,
-      },
-      {
-        label: "Seguridad (2FA)",
-        icon: "pi pi-shield",
-        route: "/perfil-2fa",
-        command: () => router.push("/perfil-2fa"),
-      },
-    ],
-  },
-]);
+// Menú de administración (solo visible para admins)
+const adminMenuItem = {
+  label: "Administración",
+  icon: "pi pi-cog",
+  items: [
+    {
+      label: "Panel de Administración",
+      icon: "pi pi-th-large",
+      route: "/admin",
+      command: () => router.push("/admin"),
+    },
+    {
+      separator: true,
+    },
+    {
+      label: "Gestión de Tickets",
+      icon: "pi pi-ticket",
+      route: "/admin/tickets",
+      command: () => router.push("/admin/tickets"),
+    },
+    {
+      label: "Bitácora de Eventos",
+      icon: "pi pi-file-edit",
+      route: "/admin/audit-logs",
+      command: () => router.push("/admin/audit-logs"),
+    },
+    {
+      separator: true,
+    },
+    {
+      label: "Criterios de Elegibilidad",
+      icon: "pi pi-users",
+      route: "/admin/eligibility-criteria",
+      command: () => router.push("/admin/eligibility-criteria"),
+    },
+    {
+      label: "Gestión de Sorteos",
+      icon: "pi pi-gift",
+      route: "/admin/raffle",
+      command: () => router.push("/admin/raffle"),
+    },
+  ],
+};
+
+// Menú de navegación dinámico (se actualiza según el rol del usuario)
+const items = computed(() => {
+  const baseItems = [
+    {
+      label: "Inicio",
+      icon: "pi pi-home",
+      route: "/",
+      command: () => router.push("/"),
+    },
+    {
+      label: "Partidos",
+      icon: "pi pi-calendar",
+      route: "/partidos",
+      command: () => router.push("/partidos"),
+    },
+    {
+      label: "Comprar Boletos",
+      icon: "pi pi-shopping-cart",
+      items: [
+        {
+          label: "Estadios",
+          icon: "pi pi-building",
+          route: "/stadiums",
+          command: () => router.push("/stadiums"),
+        },
+        {
+          label: "Ofertas de Boletos",
+          icon: "pi pi-tag",
+          route: "/ticket-offers",
+          command: () => router.push("/ticket-offers"),
+        },
+      ],
+    },
+    {
+      label: "Mis Tickets",
+      icon: "pi pi-ticket",
+      route: "/mis-tickets",
+      command: () => router.push("/mis-tickets"),
+    },
+    {
+      label: "Mi Cuenta",
+      icon: "pi pi-user",
+      items: [
+        {
+          label: "Perfil",
+          icon: "pi pi-user-edit",
+          route: "/perfil",
+          command: () => router.push("/perfil"),
+        },
+        {
+          label: "Historial",
+          icon: "pi pi-history",
+          route: "/historial",
+          command: () => router.push("/historial"),
+        },
+        {
+          separator: true,
+        },
+        {
+          label: "Seguridad (2FA)",
+          icon: "pi pi-shield",
+          route: "/perfil-2fa",
+          command: () => router.push("/perfil-2fa"),
+        },
+      ],
+    },
+  ];
+
+  // Agregar menú de administración solo si el usuario es admin
+  if (isAdmin.value) {
+    baseItems.push(adminMenuItem);
+  }
+
+  return baseItems;
+});
 
 // Función para cerrar sesión
 const handleLogout = () => {

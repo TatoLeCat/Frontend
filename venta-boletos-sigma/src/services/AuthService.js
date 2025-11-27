@@ -22,14 +22,15 @@ class AuthService {
       });
 
       // Extraer token de diferentes posibles estructuras
-      const token = response.data.token || response.data.access_token || response.data.accessToken;
+      // Prioridad: access_token > token > accessToken
+      const token = response.data.access_token || response.data.token || response.data.accessToken;
       const user = response.data.user || response.data.userData || response.data.data?.user;
 
       // Si la respuesta contiene un token, lo guardamos
       if (token) {
         this.setToken(token);
 
-        // Tambien puedes guardar informacion del usuario si la API la devuelve
+        // Tambien guardamos informacion del usuario si la API la devuelve
         if (user) {
           this.setUser(user);
         }
@@ -37,9 +38,6 @@ class AuthService {
 
       return response.data;
     } catch (error) {
-      console.error("Error completo:", error);
-      console.error("Respuesta del servidor:", error.response);
-
       // Mensaje de error más descriptivo
       const errorMessage =
         error.response?.data?.message ||
@@ -111,6 +109,49 @@ class AuthService {
   //Verifica si el usuario esta autenticado
   isAuthenticated() {
     return isAuthenticated.value;
+  }
+
+  // Verifica si el usuario es administrador
+  isAdmin() {
+    if (!user.value) return false;
+
+    // Soporta diferentes estructuras de roles del backend:
+    // Opción 1: Campo "role" con valor "admin"
+    if (user.value.role === "admin") return true;
+
+    // Opción 2: Array de roles que incluye "admin"
+    if (Array.isArray(user.value.roles) && user.value.roles.includes("admin")) return true;
+
+    // Opción 3: Campo booleano "is_admin"
+    if (user.value.is_admin === true) return true;
+
+    // Opción 4: Campo booleano "isAdmin"
+    if (user.value.isAdmin === true) return true;
+
+    return false;
+  }
+
+  // Verifica si el usuario tiene un rol específico
+  hasRole(role) {
+    if (!user.value) return false;
+
+    // Verifica en campo "role"
+    if (user.value.role === role) return true;
+
+    // Verifica en array de "roles"
+    if (Array.isArray(user.value.roles) && user.value.roles.includes(role)) return true;
+
+    return false;
+  }
+
+  // Verifica si el usuario tiene alguno de los roles proporcionados
+  hasAnyRole(roles) {
+    return roles.some(role => this.hasRole(role));
+  }
+
+  // Verifica si el usuario tiene todos los roles proporcionados
+  hasAllRoles(roles) {
+    return roles.every(role => this.hasRole(role));
   }
 
   // Obtiene el header de autorizacion para las peticiones

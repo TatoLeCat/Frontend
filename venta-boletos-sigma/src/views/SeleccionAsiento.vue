@@ -3,8 +3,29 @@
 
     <h2 class="text-2xl font-bold text-gray-800">Selección de Asientos</h2>
 
+    <!-- Alerta de No Elegido en Rifa -->
+    <Message v-if="!hasRaffleAssignment" severity="error" :closable="false" class="mb-4">
+      <div class="flex flex-col gap-3">
+        <div class="flex items-center gap-2">
+          <i class="pi pi-lock text-2xl"></i>
+          <div>
+            <p class="font-bold text-lg">Acceso Restringido</p>
+            <p>Lo sentimos, no has sido elegido en la rifa para poder comprar entradas.</p>
+            <p class="text-sm mt-2">Solo los usuarios seleccionados en la rifa pueden acceder a la compra de boletos.</p>
+          </div>
+        </div>
+        <Button
+          label="Ir al Inicio"
+          icon="pi pi-home"
+          severity="secondary"
+          @click="goToHome"
+          class="w-fit"
+        />
+      </div>
+    </Message>
+
     <!-- Selectores -->
-    <Card class="bg-white shadow-md">
+    <Card v-if="hasRaffleAssignment" class="bg-white shadow-md">
       <template #content>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           
@@ -44,12 +65,12 @@
     </Card>
 
     <!-- Loading General -->
-    <div v-if="loading" class="flex justify-center items-center py-8">
+    <div v-if="hasRaffleAssignment && loading" class="flex justify-center items-center py-8">
       <i class="pi pi-spin pi-spinner text-3xl text-blue-500"></i>
     </div>
 
     <!-- Error -->
-    <div v-if="error" class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <div v-if="hasRaffleAssignment && error" class="bg-red-50 border border-red-200 rounded-lg p-4">
       <div class="flex items-center gap-2 text-red-700">
         <i class="pi pi-exclamation-triangle"></i>
         <span>{{ error }}</span>
@@ -58,7 +79,7 @@
 
     <!-- Info selección -->
     <div
-      v-if="selectedStadium && selectedArea && !loading"
+      v-if="hasRaffleAssignment && selectedStadium && selectedArea && !loading"
       class="bg-blue-50 border border-blue-200 rounded-lg p-4"
     >
       <div class="flex items-center gap-2 text-blue-700">
@@ -72,10 +93,10 @@
     </div>
 
     <!-- MATRIZ DE ASIENTOS -->
-    <div v-if="dataFromApi.length > 0 && !loading">
+    <div v-if="hasRaffleAssignment && dataFromApi.length > 0 && !loading">
       <Card class="w-full shadow-lg">
         <template #content>
-          <SeatMatrix 
+          <SeatMatrix
             :rows="dataFromApi"
             :selectedSeats="selectedSeats"
             @select="toggleSeat"
@@ -86,7 +107,7 @@
 
     <!-- Mensaje si no hay asientos -->
     <div
-      v-if="!loading && dataFromApi.length === 0 && selectedStadium && selectedArea"
+      v-if="hasRaffleAssignment && !loading && dataFromApi.length === 0 && selectedStadium && selectedArea"
       class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center"
     >
       <i class="pi pi-inbox text-4xl text-yellow-600 mb-2"></i>
@@ -95,7 +116,7 @@
 
     <!-- Mensaje inicial -->
     <div
-      v-if="!selectedStadium || !selectedArea"
+      v-if="hasRaffleAssignment && (!selectedStadium || !selectedArea)"
       class="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center"
     >
       <i class="pi pi-map-marker text-5xl text-gray-400 mb-3"></i>
@@ -104,7 +125,7 @@
 
     <!-- RESUMEN DE COMPRA -->
     <div
-      v-if="selectedSeatsList.length > 0"
+      v-if="hasRaffleAssignment && selectedSeatsList.length > 0"
       class="bg-white p-6 shadow-md rounded-lg"
     >
       <h2 class="text-xl font-bold mb-3">Resumen de Compra</h2>
@@ -132,15 +153,36 @@
 </template>
 
 
-<script setup lang="ts">
+<script setup>
 import Card from "primevue/card";
 import Dropdown from "primevue/dropdown";
+import Message from "primevue/message";
+import Button from "primevue/button";
 import SeatMatrix from "@/components/SeatMatrix.vue";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import AuthService from "@/services/AuthService";
 
 // Router
 const router = useRouter();
+
+// Validación de rifa
+const hasRaffleAssignment = ref(false);
+
+// Verificar elegibilidad de rifa
+const checkRaffleEligibility = () => {
+  const user = AuthService.getUser();
+  if (user && user.has_raffle_assignment === true) {
+    hasRaffleAssignment.value = true;
+  } else {
+    hasRaffleAssignment.value = false;
+  }
+};
+
+// Navegar al inicio
+const goToHome = () => {
+  router.push("/");
+};
 
 // Loading states
 const loading = ref(false);
@@ -148,17 +190,17 @@ const loadingStadiums = ref(false);
 const loadingAreas = ref(false);
 
 // Error global
-const error = ref<string | null>(null);
+const error = ref(null);
 
 // Stadium selection
-const selectedStadium = ref<number | null>(null);
-const selectedArea = ref<number | null>(null);
-const stadiums = ref<any[]>([]);
-const areas = ref<any[]>([]);
+const selectedStadium = ref(null);
+const selectedArea = ref(null);
+const stadiums = ref([]);
+const areas = ref([]);
 
 // Asientos
-const dataFromApi = ref<any[]>([]);
-const selectedSeats = ref<Set<number>>(new Set());
+const dataFromApi = ref([]);
+const selectedSeats = ref(new Set());
 
 // Convert Set → Array
 const selectedSeatsList = computed(() =>
@@ -184,7 +226,7 @@ const fetchStadiums = async () => {
 };
 
 // Fetch Areas
-const fetchAreas = async (stadiumId: number) => {
+const fetchAreas = async (stadiumId) => {
   loadingAreas.value = true;
   try {
     const res = await fetch(`http://127.0.0.1:8090/stadium/${stadiumId}/areas`);
@@ -216,7 +258,7 @@ const fetchRows = async () => {
 };
 
 // Selección de asientos
-const toggleSeat = (seat: any) => {
+const toggleSeat = (seat) => {
   if (selectedSeats.value.has(seat.id)) {
     selectedSeats.value.delete(seat.id);
   } else {
@@ -227,7 +269,7 @@ const toggleSeat = (seat: any) => {
 // Crear tickets y enviar a checkout
 const goToCheckout = async () => {
   try {
-    const ticketIds: number[] = [];
+    const ticketIds = [];
 
     for (const seat of selectedSeatsList.value) {
       const res = await fetch("http://localhost:8090/tickets/create", {
@@ -284,7 +326,12 @@ const onAreaChange = () => {
 };
 
 // Mounted
-onMounted(() => fetchStadiums());
+onMounted(() => {
+  checkRaffleEligibility();
+  if (hasRaffleAssignment.value) {
+    fetchStadiums();
+  }
+});
 </script>
 
 
