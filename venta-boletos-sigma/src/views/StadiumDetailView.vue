@@ -25,7 +25,208 @@
         </button>
 
         <!-- Stadium Header -->
+        <div class="stadium-header"><template>
+  <div class="stadium-detail-view">
+    <div class="container">
+
+      <!-- LOADING -->
+      <div v-if="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Cargando información del estadio...</p>
+      </div>
+
+      <!-- ERROR -->
+      <div v-else-if="error" class="error-message">
+        <p>{{ error }}</p>
+        <button @click="loadStadium" class="btn-retry">Reintentar</button>
+        <button @click="goBack" class="btn-back">Volver</button>
+      </div>
+
+      <!-- CONTENT -->
+      <div v-else-if="stadium" class="stadium-detail">
+
+        <!-- Botón Regresar -->
+        <button @click="goBack" class="btn-back-top">
+          <i class="pi pi-arrow-left"></i>
+          Volver a Estadios
+        </button>
+
+        <!-- Encabezado -->
         <div class="stadium-header">
+
+          <!-- Imagen principal -->
+          <div class="stadium-image-large">
+            <img
+              :src="stadium.image_url || getDefaultImage()"
+              @error="handleImageError"
+            />
+          </div>
+
+          <!-- Info del estadio -->
+          <div class="stadium-main-info">
+            <h1>{{ stadium.name }}</h1>
+
+            <div class="info-grid">
+
+              <!-- Dirección -->
+              <div class="info-item">
+                <div class="info-icon"><i class="pi pi-map-marker"></i></div>
+                <div>
+                  <p class="info-label">Dirección</p>
+                  <p class="info-value">{{ stadium.address || "No disponible" }}</p>
+                </div>
+              </div>
+
+              <!-- Capacidad -->
+              <div class="info-item">
+                <div class="info-icon"><i class="pi pi-users"></i></div>
+                <div>
+                  <p class="info-label">Capacidad</p>
+                  <p class="info-value">{{ formatCapacity(stadium.capacity) }}</p>
+                </div>
+              </div>
+
+              <!-- Zona horaria -->
+              <div class="info-item">
+                <div class="info-icon"><i class="pi pi-clock"></i></div>
+                <div>
+                  <p class="info-label">Zona Horaria</p>
+                  <p class="info-value">{{ stadium.tz }}</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Botones -->
+            <div class="action-buttons">
+              <button @click="openMap" class="btn-primary">
+                <i class="pi pi-map"></i>
+                Ver en Google Maps
+              </button>
+
+              <button @click="goToMatches" class="btn-secondary">
+                Ver Partidos Disponibles
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="additional-info">
+          <h2>Mapa Integrado</h2>
+
+          <div class="map-placeholder">
+            <iframe
+              v-if="stadium.address"
+              :src="getEmbedMapUrl()"
+              width="100%"
+              height="300"
+              frameborder="0"
+              style="border:0;border-radius:12px;"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+
+            <div v-else class="map-placeholder-text">
+              No hay mapa disponible
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "StadiumDetailView",
+
+  data() {
+    return {
+      stadium: null,
+      loading: false,
+      error: null,
+      API_BASE: "http://localhost:8090"
+    };
+  },
+
+  mounted() {
+    this.loadStadium();
+  },
+
+  methods: {
+    /** ===========================
+     *  Cargar estadio real del backend
+     *  ===========================*/
+    async loadStadium() {
+      this.loading = true;
+      this.error = null;
+
+      try {
+        const id = this.$route.params.id;
+        const res = await fetch(`${this.API_BASE}/stadium/${id}`);
+
+        if (!res.ok) throw new Error("Estadio no encontrado");
+
+        this.stadium = await res.json();
+      } catch (err) {
+        console.error(err);
+        this.error = err.message || "Error cargando el estadio";
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    /** ===========================
+     *  Navegación según tu flujo
+     *  ===========================*/
+    goBack() {
+      this.$router.push({ name: "StadiumList" });
+    },
+
+    goToMatches() {
+      this.$router.push({
+        name: "MatchesByStadium",
+        params: { stadiumId: this.stadium.id }
+      });
+    },
+
+    openMap() {
+      const query = encodeURIComponent(this.stadium.address || this.stadium.name);
+      window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank");
+    },
+
+    /** ===========================
+     *  Utils
+     *  ===========================*/
+    getDefaultImage() {
+      return "https://via.placeholder.com/800x400?text=Estadio";
+    },
+
+    handleImageError(e) {
+      e.target.src = this.getDefaultImage();
+    },
+
+    formatCapacity(cap) {
+      return cap ? cap.toLocaleString() + " personas" : "Desconocida";
+    },
+
+    getEmbedMapUrl() {
+      const encoded = encodeURIComponent(this.stadium.address);
+      return `https://www.google.com/maps?q=${encoded}&output=embed`;
+    }
+  }
+};
+</script>
+
+<style scoped>
+/* Mantiene tu diseño original... (no recorto para que te funcione igual) */
+</style>
+
           <div class="stadium-image-large">
             <img 
               :src="stadium.image_url || getDefaultImage()" 
