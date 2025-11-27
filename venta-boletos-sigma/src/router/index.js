@@ -34,10 +34,6 @@ import EligibilityCriteriaDashboard from "@/views/EligibilityCriteriaDashboard.v
 import RaffleAdmin from "@/views/RaffleAdmin.vue";
 import TicketStatusView from "@/views/TicketStatusView.vue";
 
-// Torneo - Fases y Equipos
-import TournamentPhasesView from "@/views/TournamentPhasesView.vue";
-import PhaseDetailView from "@/views/PhaseDetailView.vue";
-
 //CE
 // Registrar equipos y resultados
 import MatchResultView from "@/views/MatchResultView.vue";
@@ -45,7 +41,6 @@ import TeamRegisterView from "@/views/TeamRegisterView.vue";
 import MatchRegisterView from "@/views/MatchRegisterView.vue";
 import PhaseManagementView from "@/views/PhaseManagementView.vue";
 import StandingsView from "@/views/StandingsView.vue";
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -219,19 +214,6 @@ const router = createRouter({
       meta: { requiresAdmin: true },
     },
 
-
-    // ===== TORNEO - FASES Y EQUIPOS =====
-    {
-      path: "/fases",
-      name: "TournamentPhases",
-      component: TournamentPhasesView,
-    },
-    {
-      path: "/fases/:id",
-      name: "PhaseDetail",
-      component: PhaseDetailView,
-      props: true,
-    },
     // Tabla de Posiciones (Público)
     {
       path: "/tabla-posiciones",
@@ -239,8 +221,8 @@ const router = createRouter({
       component: StandingsView,
     },
     {
-      path: '/ticketsStatusControl',
-      name: 'TicketsStatusControl',
+      path: "/ticketsStatusControl",
+      name: "TicketsStatusControl",
       component: TicketStatusView,
     },
 
@@ -248,7 +230,7 @@ const router = createRouter({
       path: "/seleccionar-asiento/:matchId",
       name: "SelectSeats",
       component: () => import("@/views/SeleccionAsiento.vue"),
-      props: true
+      props: true,
     },
   ],
 });
