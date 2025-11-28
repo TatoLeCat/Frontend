@@ -4,7 +4,7 @@
       <header class="header">
         <h1>Rifa de Ingreso</h1>
         <p class="hint">
-          Solo administradores con un API token válido pueden ejecutar la rifa y ver el historial.
+          Solo administradores con un API token válido pueden ejecutar la rifa.
         </p>
       </header>
 
@@ -37,83 +37,24 @@
       <section v-if="result" class="card">
         <h2>Resultado de la rifa</h2>
         <p>
-          Candidatos: <strong>{{ result.total_candidates }}</strong> ·
           Eligible: <strong>{{ result.total_eligible }}</strong> ·
-          Winners: <strong>{{ result.total_winners }}</strong>
+          Winners: <strong>{{ result.winners.length }}</strong>
         </p>
 
-        <table v-if="result.winners.length > 0" class="table">
-          <thead>
-            <tr>
-              <th>Assignment ID</th>
-              <th>User ID</th>
-              <th>Email</th>
-              <th>Expires at</th>
-              <th>Purchase link</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="w in result.winners" :key="w.assignment_id">
-              <td>{{ w.assignment_id }}</td>
-              <td>{{ w.user_id }}</td>
-              <td>{{ w.email || '—' }}</td>
-              <td>{{ formatDate(w.expires_at) }}</td>
-              <td>
-                <a :href="w.purchase_link" target="_blank" rel="noopener noreferrer">
-                  Open
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ul v-if="result.winners.length > 0">
+          <li v-for="id in result.winners" :key="id">
+            User ID: {{ id }}
+          </li>
+        </ul>
 
         <p v-else>No winners selected.</p>
-      </section>
-
-      <!-- Historial de ejecución de rifas -->
-      <section class="card">
-        <div class="card-header">
-          <h2>Historial de rifas</h2>
-          <button class="btn btn-sm" @click="fetchAudit" :disabled="auditLoading">
-            {{ auditLoading ? 'Refreshing...' : 'Refresh' }}
-          </button>
-        </div>
-
-        <p v-if="auditError" class="error">{{ auditError }}</p>
-
-        <table v-if="audit.length > 0" class="table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>When</th>
-              <th>Actor</th>
-              <th>Action</th>
-              <th>Entity</th>
-              <th>Entity ID</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="entry in audit" :key="entry.id">
-              <td>{{ entry.id }}</td>
-              <td>{{ formatDate(entry.created_at) }}</td>
-              <td>{{ entry.actor || '—' }}</td>
-              <td>{{ entry.action }}</td>
-              <td>{{ entry.entity_type }}</td>
-              <td>{{ entry.entity_id }}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <p v-else class="muted">
-          No raffle runs have been logged yet.
-        </p>
       </section>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import axios from 'axios'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -126,10 +67,6 @@ const form = ref({
 const loading = ref(false)
 const error = ref(null)
 const result = ref(null)
-
-const audit = ref([])
-const auditLoading = ref(false)
-const auditError = ref(null)
 
 function getAdminHeaders () {
   const token = localStorage.getItem('ADMIN_API_TOKEN')
@@ -162,8 +99,6 @@ async function runRaffle () {
       { headers }
     )
     result.value = res.data
-    // Actualiza auditoría después de correr rifa
-    fetchAudit()
   } catch (err) {
     console.error(err)
     if (err.message?.includes('Missing admin token')) {
@@ -179,41 +114,6 @@ async function runRaffle () {
     loading.value = false
   }
 }
-
-async function fetchAudit () {
-  auditLoading.value = true
-  auditError.value = null
-  try {
-    const headers = getAdminHeaders()
-    const res = await axios.get(`${API_BASE}/raffle/audit`, {
-      headers,
-      params: { limit: 50 },
-    })
-    audit.value = res.data
-  } catch (err) {
-    console.error(err)
-    if (err.message?.includes('Missing admin token')) {
-      auditError.value = 'Missing admin token. Set ADMIN_API_TOKEN in localStorage.'
-    } else if (err.response?.status === 401) {
-      auditError.value = 'Not authorized. Invalid or missing admin token.'
-    } else if (err.response?.data?.detail) {
-      auditError.value = JSON.stringify(err.response.data.detail)
-    } else {
-      auditError.value = 'Error loading raffle audit log.'
-    }
-  } finally {
-    auditLoading.value = false
-  }
-}
-
-function formatDate (value) {
-  if (!value) return '—'
-  return new Date(value).toLocaleString()
-}
-
-onMounted(() => {
-  fetchAudit()
-})
 </script>
 
 <style scoped>
@@ -375,7 +275,7 @@ input:focus {
   box-shadow: none;
 }
 
-/* Table */
+/* Table (used if you later add more detail) */
 .table {
   width: 100%;
   border-collapse: collapse;
